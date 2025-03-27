@@ -1,11 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
     namespace = "com.souckan.moneyappone"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.souckan.moneyappone"
@@ -33,9 +36,25 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures{
+        viewBinding = true
+        buildConfig = true
+    }
 }
 
 dependencies {
+    val navVersion = "2.8.8"
+    //NavComponent
+    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
+    //DaggerHilt
+    implementation("com.google.dagger:hilt-android:2.50")
+    kapt("com.google.dagger:hilt-compiler:2.50")
+    //Retrofit
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

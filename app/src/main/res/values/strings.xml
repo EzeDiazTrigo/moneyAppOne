@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MoneyAppOne</string>
+
+    <string name="debt">Deudas</string>
+    <string name="bill">Gastos</string>
+    <string name="total">Totales</string>
+    <string name="service">Servicios</string>
 </resources>
