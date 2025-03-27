@@ -23,35 +23,37 @@
     <FrameLayout
         android:id="@+id/toolBar"
         android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="80dp"
         android:background="@color/primaryDark"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.cardview.widget.CardView
-            android:layout_width="170dp"
+
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
+            android:layout_gravity="start|bottom"
             android:layout_margin="10dp"
-            app:cardCornerRadius="16dp"
+
             app:cardBackgroundColor="@color/primaryDark">
 
             <TextView
+                android:id="@+id/tvPesos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="$250000"
-                android:layout_marginStart="5dp"
-                android:layout_gravity="start|center_vertical"
+
+                android:layout_gravity="start|bottom"
                 android:textSize="25sp"
                 android:textStyle="bold"
                 android:textColor="@color/gold"/>
 
             <ImageView
                 android:layout_width="40dp"
-                android:layout_gravity="end|center_vertical"
-                android:layout_marginEnd="0dp"
-                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+
+                android:layout_height="35dp"
                 android:src="@drawable/argentina_flag"/>
 
         </androidx.cardview.widget.CardView>
@@ -59,26 +61,27 @@
         <androidx.cardview.widget.CardView
             android:layout_width="170dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|center_vertical"
+            android:layout_gravity="end|bottom"
             android:layout_margin="10dp"
             app:cardCornerRadius="16dp"
             app:cardBackgroundColor="@color/primaryDark">
 
             <TextView
+                android:id="@+id/tvDollar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="$300"
-                android:layout_marginStart="25dp"
-                android:layout_gravity="start|center_vertical"
+
+                android:layout_gravity="start|bottom"
                 android:textSize="25sp"
                 android:textStyle="bold"
                 android:textColor="@color/gold"/>
 
             <ImageView
-                android:layout_width="40dp"
+                android:layout_width="45dp"
                 android:layout_gravity="end|center_vertical"
                 android:layout_marginEnd="10dp"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:src="@drawable/usa_flag"/>
 
         </androidx.cardview.widget.CardView>

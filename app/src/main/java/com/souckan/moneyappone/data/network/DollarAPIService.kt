@@ -5,7 +5,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Url
 
-interface DolarAPIService {
+interface DollarAPIService {
     @GET
-    suspend fun getDolarPrice(@Url url:String): Response<DollarResponse>
+    suspend fun getDollarPrice(@Url url:String): Response<DollarResponse>
 }
