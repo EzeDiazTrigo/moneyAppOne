@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         ).build()
         val totalDao = database.getTotalDao()
         GlobalScope.launch(Dispatchers.IO) {
-            val hola = TotalEntity(currency = "ARG", totalAmount = 2000.0F, account = "BANCO")
+            val hola = TotalEntity(currency = "DDD", totalAmount = 2233.0F, account = "Das")
             totalDao.insertAll(listOf(hola))
         }
         GlobalScope.launch(Dispatchers.IO) {
