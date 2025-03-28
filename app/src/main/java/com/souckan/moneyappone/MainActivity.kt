@@ -5,19 +5,25 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import androidx.room.Room
+import com.souckan.moneyappone.data.database.entity.TotalEntity
+import com.souckan.moneyappone.data.database.TotalDatabase
 import com.souckan.moneyappone.data.network.DollarAPIService
 import com.souckan.moneyappone.data.network.NetworkModule.provideRetrofit
 import com.souckan.moneyappone.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.GlobalScope
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+
 
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
@@ -31,6 +37,23 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initUI()
+
+        val database = Room.databaseBuilder(
+            applicationContext,
+            TotalDatabase::class.java,
+            "total_database"
+        ).build()
+        val totalDao = database.getTotalDao()
+        GlobalScope.launch(Dispatchers.IO) {
+            val hola = TotalEntity(currency = "ARG", totalAmount = 2000.0F, account = "BANCO")
+            totalDao.insertAll(listOf(hola))
+        }
+        GlobalScope.launch(Dispatchers.IO) {
+            val lista = totalDao.getAllTotals()
+            lista.forEach {
+                Log.d("DB_TEST", "ID: ${it.idTotal}, Moneda: ${it.currency}, Monto: ${it.totalAmount}, Cuenta: ${it.account}")
+            }
+        }
     }
 
     private fun initUI(){
@@ -42,11 +65,9 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread {
                 if (call.isSuccessful) {
                     if (response != null) {
-                        Log.d("Precio Dolar", response.venta.toString())
                         dolarHoy = response.venta.toFloat()
                         dolares = pesos / dolarHoy
                         binding.tvDollar.text = String.format("%.2f", dolares)
-                        Log.d("Precio Dolar2", dolares.toString())
                     }
                 } else {
                     showError()
