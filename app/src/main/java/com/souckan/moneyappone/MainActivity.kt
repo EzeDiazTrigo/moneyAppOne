@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -14,6 +15,8 @@ import com.souckan.moneyappone.data.database.TotalDatabase
 import com.souckan.moneyappone.data.network.DollarAPIService
 import com.souckan.moneyappone.data.network.NetworkModule.provideRetrofit
 import com.souckan.moneyappone.databinding.ActivityMainBinding
+import com.souckan.moneyappone.domain.model.Total
+import com.souckan.moneyappone.ui.TotalViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +26,7 @@ import kotlinx.coroutines.GlobalScope
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-
+    private val totalViewModel: TotalViewModel by viewModels()
 
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
@@ -37,15 +40,28 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initUI()
+        var hola: Total = Total("USD", 15.0F, "FONDO")
+        var listita:List<Total> = listOf(hola)
+        val totalEntities = listita.map { total ->
+            TotalEntity(
+                currency = total.currency,
+                totalAmount = total.totalAmount,
+                account = total.account
+            )
+        }
 
-        val database = Room.databaseBuilder(
+        // Insertar en la base de datos
+        totalViewModel.insertAll(totalEntities)
+
+        //Log.d("LISTA TOTALES", totalViewModel.getAllTotals().toString())
+        /*val database = Room.databaseBuilder(
             applicationContext,
             TotalDatabase::class.java,
             "total_database"
         ).build()
         val totalDao = database.getTotalDao()
         GlobalScope.launch(Dispatchers.IO) {
-            val hola = TotalEntity(currency = "DDD", totalAmount = 2233.0F, account = "Das")
+            val hola = TotalEntity(currency = "123", totalAmount = 123.0F, account = "123")
             totalDao.insertAll(listOf(hola))
         }
         GlobalScope.launch(Dispatchers.IO) {
@@ -53,7 +69,9 @@ class MainActivity : AppCompatActivity() {
             lista.forEach {
                 Log.d("DB_TEST", "ID: ${it.idTotal}, Moneda: ${it.currency}, Monto: ${it.totalAmount}, Cuenta: ${it.account}")
             }
-        }
+        }*/
+
+
     }
 
     private fun initUI(){
