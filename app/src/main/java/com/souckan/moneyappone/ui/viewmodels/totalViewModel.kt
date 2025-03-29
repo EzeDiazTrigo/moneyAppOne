@@ -1,4 +1,4 @@
-package com.souckan.moneyappone.ui
+package com.souckan.moneyappone.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
@@ -29,5 +29,16 @@ class TotalViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteAllTotals()
         }
+    }
+
+    fun insertBill(amount: Float, accountName: String, currencyCode: String, billDate:String, description:String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.insertBill(currencyCode, accountName, amount, billDate, description)
+        }
+    }
+
+    suspend fun pesosToDollar(amount:Float):Float{
+        val dollarPrice = repository.getDollarPrice()
+        return  amount / dollarPrice
     }
 }

@@ -10,18 +10,18 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import androidx.room.Room
-import com.souckan.moneyappone.data.database.entity.TotalEntity
 import com.souckan.moneyappone.data.database.TotalDatabase
+import com.souckan.moneyappone.data.database.entity.TotalEntity
 import com.souckan.moneyappone.data.network.DollarAPIService
 import com.souckan.moneyappone.data.network.NetworkModule.provideRetrofit
 import com.souckan.moneyappone.databinding.ActivityMainBinding
 import com.souckan.moneyappone.domain.model.Total
-import com.souckan.moneyappone.ui.TotalViewModel
+import com.souckan.moneyappone.ui.viewmodels.TotalViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -40,21 +40,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initUI()
-        var hola: Total = Total("USD", 15.0F, "FONDO")
-        var listita:List<Total> = listOf(hola)
-        val totalEntities = listita.map { total ->
-            TotalEntity(
-                currency = total.currency,
-                totalAmount = total.totalAmount,
-                account = total.account
-            )
-        }
+
+        var hola = TotalEntity(1000,"DAI", 152.0F, "GAL")
+        var listita:List<TotalEntity> = listOf(hola)
 
         // Insertar en la base de datos
-        totalViewModel.insertAll(totalEntities)
+        //totalViewModel.insertAll(listita)
 
         //Log.d("LISTA TOTALES", totalViewModel.getAllTotals().toString())
-        /*val database = Room.databaseBuilder(
+        val database = Room.databaseBuilder(
             applicationContext,
             TotalDatabase::class.java,
             "total_database"
@@ -69,7 +63,7 @@ class MainActivity : AppCompatActivity() {
             lista.forEach {
                 Log.d("DB_TEST", "ID: ${it.idTotal}, Moneda: ${it.currency}, Monto: ${it.totalAmount}, Cuenta: ${it.account}")
             }
-        }*/
+        }
 
 
     }
@@ -77,21 +71,16 @@ class MainActivity : AppCompatActivity() {
     private fun initUI(){
         initNavigation()
         binding.tvPesos.text = String.format("%.2f", pesos)
+
         CoroutineScope(Dispatchers.IO).launch {
-            val call = provideRetrofit().create(DollarAPIService::class.java).getDollarPrice("blue")
-            val response = call.body()
-            runOnUiThread {
-                if (call.isSuccessful) {
-                    if (response != null) {
-                        dolarHoy = response.venta.toFloat()
-                        dolares = pesos / dolarHoy
-                        binding.tvDollar.text = String.format("%.2f", dolares)
-                    }
-                } else {
-                    showError()
-                }
+            dolares = totalViewModel.pesosToDollar(pesos)
+            Log.d("DOLAR", dolares.toString())
+            runOnUiThread{
+                Log.d("DOLAR", dolares.toString())
+                binding.tvDollar.text = String.format("%.2f", dolares)
             }
         }
+
 
     }
 

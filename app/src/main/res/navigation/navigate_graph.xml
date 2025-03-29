@@ -7,22 +7,22 @@
 
     <fragment
         android:id="@+id/billFragment"
-        android:name="com.souckan.moneyappone.ui.billFragment"
+        android:name="com.souckan.moneyappone.ui.fragments.billFragment"
         android:label="fragment_bill"
         tools:layout="@layout/fragment_bill" />
     <fragment
         android:id="@+id/serviceFragment"
-        android:name="com.souckan.moneyappone.ui.serviceFragment"
+        android:name="com.souckan.moneyappone.ui.fragments.serviceFragment"
         android:label="fragment_service"
         tools:layout="@layout/fragment_service" />
     <fragment
         android:id="@+id/totalFragment"
-        android:name="com.souckan.moneyappone.ui.totalFragment"
+        android:name="com.souckan.moneyappone.ui.fragments.totalFragment"
         android:label="fragment_total"
         tools:layout="@layout/fragment_total" />
     <fragment
         android:id="@+id/debtFragment"
-        android:name="com.souckan.moneyappone.ui.debtFragment"
+        android:name="com.souckan.moneyappone.ui.fragments.debtFragment"
         android:label="fragment_debt"
         tools:layout="@layout/fragment_debt" />
 </navigation>
