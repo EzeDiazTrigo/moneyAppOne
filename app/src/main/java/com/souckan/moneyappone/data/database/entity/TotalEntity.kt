@@ -9,11 +9,11 @@ import androidx.room.PrimaryKey
 data class TotalEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "idTotal") val idTotal:Int = 0,
-    @ColumnInfo(name = "currency") val currency:String,
+    @ColumnInfo(name = "idCurrency") val idCurrency:Int,
     @ColumnInfo(name = "totalAmount") var totalAmount:Float,
-    @ColumnInfo(name = "account") val account:String
+    @ColumnInfo(name = "idAccount") val idAccount:Int
 ){
-    constructor() : this(0, "", 0.0F, "")
+    constructor() : this(0, 0, 0.0F, 0)
 }
 
 //fun Total.toDatabase() = TotalEntity(currency = currency, totalAmount = totalAmount, account = account)

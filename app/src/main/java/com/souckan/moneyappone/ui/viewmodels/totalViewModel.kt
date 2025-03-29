@@ -37,6 +37,12 @@ class TotalViewModel @Inject constructor(
         }
     }
 
+    fun getAllBills(){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getAllBills()
+        }
+    }
+
     suspend fun pesosToDollar(amount:Float):Float{
         val dollarPrice = repository.getDollarPrice()
         return  amount / dollarPrice

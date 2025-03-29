@@ -17,8 +17,8 @@ interface AccountDao {
     @Query("DELETE FROM account_table")
     suspend fun deleteAllAccounts()
 
-    @Query("SELECT * FROM account_table WHERE accountName = :name LIMIT 1")
-    suspend fun getAccountByName(name: String): AccountEntity?
+    @Query("SELECT * FROM account_table WHERE accountName = :name AND idCurrency = :currencyCode LIMIT 1")
+    suspend fun getAccountByName(name: String, currencyCode:String): AccountEntity?
 
 
 }

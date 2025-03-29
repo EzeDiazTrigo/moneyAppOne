@@ -23,6 +23,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -40,8 +42,22 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initUI()
+        try {
+            totalViewModel.insertBill(currencyCode = "USD", accountName = "MP", amount = 200.0F, billDate = "20250329", description = "Compra de prueba")
+            Log.d("INSERT", "Bill insertado correctamente")
 
-        var hola = TotalEntity(1000,"DAI", 152.0F, "GAL")
+        }catch (e: Exception) {
+            Log.e("INSERT", "Error insertando el Bill", e)
+        }
+        try {
+            val bills = totalViewModel.getAllBills()
+            Log.d("GET", bills.toString())
+        }catch (e: Exception){
+            Log.e("GET", "Error obteniendo los Bills", e)
+        }
+
+        /*
+        var hola = TotalEntity(1000,0, 152.0F, 0)
         var listita:List<TotalEntity> = listOf(hola)
 
         // Insertar en la base de datos
@@ -55,15 +71,15 @@ class MainActivity : AppCompatActivity() {
         ).build()
         val totalDao = database.getTotalDao()
         GlobalScope.launch(Dispatchers.IO) {
-            val hola = TotalEntity(currency = "123", totalAmount = 123.0F, account = "123")
+            val hola = TotalEntity(idCurrency = 0, totalAmount = 123.0F, idAccount = 0)
             totalDao.insertAll(listOf(hola))
         }
         GlobalScope.launch(Dispatchers.IO) {
             val lista = totalDao.getAllTotals()
             lista.forEach {
-                Log.d("DB_TEST", "ID: ${it.idTotal}, Moneda: ${it.currency}, Monto: ${it.totalAmount}, Cuenta: ${it.account}")
+                Log.d("DB_TEST", "ID: ${it.idTotal}, Moneda: ${it.idCurrency}, Monto: ${it.totalAmount}, Cuenta: ${it.idAccount}")
             }
-        }
+        }*/
 
 
     }
@@ -94,3 +110,5 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Ha ocurrido un error", Toast.LENGTH_SHORT).show()
     }
 }
+
+
