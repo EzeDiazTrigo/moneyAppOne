@@ -13,5 +13,5 @@ data class CurrencyEntity(
     @ColumnInfo(name = "currencyName") val currencyName:String,
     @ColumnInfo(name = "dollarPrice") val dollarPrice:Float
 ){
-    constructor() : this(0, "", 0.0F)
+    constructor() : this(0, "", 1.0F)
 }

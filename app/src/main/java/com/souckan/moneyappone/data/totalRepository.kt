@@ -50,7 +50,8 @@ class TotalRepository @Inject constructor(
 
     suspend fun insertBill(currencyCode: String, accountName: String,amount: Float, billDate: String, description:String) {
         // Verificar si la cuenta existe, si no, crearla
-        var account = accountDao.getAccountByName(accountName, currencyCode)
+        var currency = currencyDao.getCurrencyByCode(currencyCode)
+        var account = currency?.let { accountDao.getAccountByName(accountName, it.idCurrency) }
         var currencyAccount = currencyDao.getCurrencyByCode(currencyCode)?.idCurrency
         if (account == null) {
             val newAccount =
@@ -58,13 +59,20 @@ class TotalRepository @Inject constructor(
             if (newAccount != null) {
                 accountDao.insertAll(newAccount)
             }
-            account = accountDao.getAccountByName(accountName, currencyCode) // Obtener el nuevo ID
+            if (currency != null) {
+                account = accountDao.getAccountByName(accountName, currency.idCurrency)
+            } // Obtener el nuevo ID
         }
 
         // Verificar si la moneda existe, si no, crearla
-        var currency = currencyDao.getCurrencyByCode(currencyCode)
+
+        var currentDollarPrice:Float = 1.0F
         if (currency == null) {
-            val newCurrency = CurrencyEntity(currencyName = currencyCode, dollarPrice = getDollarPrice())
+            when(currencyCode){
+                "USD" -> { currentDollarPrice = 1.0F }
+                "ARG" -> { currentDollarPrice = getDollarPrice() }
+            }
+            val newCurrency = CurrencyEntity(currencyName = currencyCode, dollarPrice = currentDollarPrice)
             currencyDao.insertAll(newCurrency)
             currency = currencyDao.getCurrencyByCode(currencyCode) // Obtener el nuevo ID
         }
@@ -108,6 +116,10 @@ class TotalRepository @Inject constructor(
 
     suspend fun getAllAccountsNames(): List<String> {
         return accountDao.getAllAccountNames()
+    }
+
+    suspend fun getAllCurrenciesNames(): List<String> {
+        return currencyDao.getAllCurrenciesNames()
     }
 
 

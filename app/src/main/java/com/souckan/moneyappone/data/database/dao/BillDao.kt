@@ -9,7 +9,7 @@ import androidx.room.Query
 @Dao
 interface BillDao {
 
-    @Query("SELECT * FROM bill_table ORDER BY billDate DESC")
+    @Query("SELECT * FROM bill_table")
     suspend fun getAllBills():List<BillEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -51,9 +51,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/insert_amount"
-        android:inputType="text"
+        android:inputType="numberDecimal"
         android:textColor="@color/white"
         android:textColorHint="@color/colorHint"
+
         />
 
     <TextView

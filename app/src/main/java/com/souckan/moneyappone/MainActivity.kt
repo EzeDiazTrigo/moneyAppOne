@@ -11,6 +11,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import androidx.room.Room
 import com.souckan.moneyappone.data.database.TotalDatabase
+import com.souckan.moneyappone.data.database.entity.BillEntity
 import com.souckan.moneyappone.data.database.entity.TotalEntity
 import com.souckan.moneyappone.data.network.DollarAPIService
 import com.souckan.moneyappone.data.network.NetworkModule.provideRetrofit
@@ -42,14 +43,43 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initUI()
-        totalViewModel.insertBill(currencyCode = "USD", accountName = "AFAD", amount = 200.0F, billDate = "20250329", description = "Compra de prueba")
+        val currencyCode = "ARG"
+        val accountName = "GALICIA"
+        val amount = 200.0F
+        val billDate = "20250329"
+        val description = "Compra de prueba"
+        totalViewModel.insertBill(currencyCode = currencyCode, accountName = "${accountName} (${currencyCode})", amount = amount, billDate = billDate, description = description)
         Log.d("INSERT", "Bill insertado correctamente")
         val accounts = totalViewModel.getAllAccountsNames()
-        Log.d("GET", accounts.toString())
+
 
         totalViewModel.getAllAccountsNames().observe(this) { totals ->
             totals.forEach { total ->
-                Log.d("HOLA", "Total -> Cuenta: ${total}")
+                Log.d("CUENTAS NOMBRE", "Nombre cuenta -> Cuenta: ${total}")
+            }
+        }
+
+        totalViewModel.getAllCurrencies().observe(this) { totals ->
+            totals.forEach { total ->
+                Log.d("MONEDAS", "Moneda -> Cuenta: ${total.idCurrency}, Nombre: ${total.currencyName}, Precio dolar: ${total.dollarPrice}")
+            }
+        }
+
+        totalViewModel.getAllBills().observe(this) { totals ->
+            totals.forEach { total ->
+                Log.d("GASTOS", "Gasto -> Fecha: ${total.billDate}, Cuenta: ${total.idAccount}, Moneda: ${total.idCurrency}, Gasto: ${total.idBill}, Monto: ${total.amount}, Descripcion: ${total.description}")
+            }
+        }
+
+        totalViewModel.getAllAccounts().observe(this) { totals ->
+            totals.forEach { total ->
+                Log.d("CUENTAS", "Cuenta -> Cuenta: ${total.idAccount}, Moneda: ${total.idCurrency}, Nombre: ${total.accountName}")
+            }
+        }
+
+        totalViewModel.getAllTotals().observe(this) { totals ->
+            totals.forEach { total ->
+                Log.d("TOTALES", "Total -> Cuenta: ${total.idAccount}, Moneda: ${total.idCurrency}, Total: ${total.idTotal}, Monto total: ${total.totalAmount}")
             }
         }
         /*
@@ -84,6 +114,7 @@ class MainActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             dolares = totalViewModel.pesosToDollar(pesos)
+            Log.d("DOLAR", totalViewModel.getDollarPrice().toString() )
             runOnUiThread{
                 binding.tvDollar.text = "$" + String.format("%.2f", dolares)
             }
