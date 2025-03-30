@@ -3,6 +3,7 @@ package com.souckan.moneyappone.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
+import com.souckan.moneyappone.data.database.entity.AccountEntity
 import com.souckan.moneyappone.data.database.entity.TotalEntity
 import com.souckan.moneyappone.data.repository.TotalRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,14 +38,28 @@ class TotalViewModel @Inject constructor(
         }
     }
 
-    fun getAllBills(){
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.getAllBills()
-        }
+    fun getAllBills() = liveData(Dispatchers.IO) {
+        emit(repository.getAllBills())
     }
 
     suspend fun pesosToDollar(amount:Float):Float{
         val dollarPrice = repository.getDollarPrice()
         return  amount / dollarPrice
     }
+
+
+
+    fun getAllAccounts() = liveData(Dispatchers.IO) {
+        emit(repository.getAllAccounts())
+    }
+
+    fun getAllAccountsNames()= liveData(Dispatchers.IO) {
+        emit(repository.getAllAccountsNames())
+    }
+
+
+    fun getAllCurrencies() = liveData(Dispatchers.IO) {
+        emit(repository.getAllCurrencies())
+    }
+
 }

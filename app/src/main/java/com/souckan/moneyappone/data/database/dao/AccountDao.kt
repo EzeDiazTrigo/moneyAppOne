@@ -11,6 +11,9 @@ interface AccountDao {
     @Query("SELECT * FROM account_table ORDER BY accountName DESC")
     suspend fun getAllAccount():List<AccountEntity>
 
+    @Query("SELECT accountName FROM account_table ORDER BY accountName DESC")
+    suspend fun getAllAccountNames():List<String>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(account: AccountEntity)
 

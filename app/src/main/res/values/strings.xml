@@ -5,4 +5,19 @@
     <string name="bill">Gastos</string>
     <string name="total">Totales</string>
     <string name="service">Servicios</string>
+
+    <string name="select_currency">Seleccione su moneda</string>
+    <string name="select_account">Seleccione su cuenta</string>
+    <string name="insert_amount">Ingrese el monto</string>
+    <string name="select_date">Seleccione la fecha</string>
+    <string name="insert_description">Ingrese una descripción</string>
+    <string name="new_bill">Nuevo gasto</string>
+    <string name="add_bill">Añadir gasto</string>
+
+    <string name="currency">Moneda</string>
+    <string name="account">Cuenta</string>
+    <string name="amount">Monto</string>
+    <string name="date">Fecha</string>
+    <string name="description">Descripción</string>
+
 </resources>

@@ -42,20 +42,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initUI()
-        try {
-            totalViewModel.insertBill(currencyCode = "USD", accountName = "MP", amount = 200.0F, billDate = "20250329", description = "Compra de prueba")
-            Log.d("INSERT", "Bill insertado correctamente")
+        totalViewModel.insertBill(currencyCode = "USD", accountName = "AFAD", amount = 200.0F, billDate = "20250329", description = "Compra de prueba")
+        Log.d("INSERT", "Bill insertado correctamente")
+        val accounts = totalViewModel.getAllAccountsNames()
+        Log.d("GET", accounts.toString())
 
-        }catch (e: Exception) {
-            Log.e("INSERT", "Error insertando el Bill", e)
+        totalViewModel.getAllAccountsNames().observe(this) { totals ->
+            totals.forEach { total ->
+                Log.d("HOLA", "Total -> Cuenta: ${total}")
+            }
         }
-        try {
-            val bills = totalViewModel.getAllBills()
-            Log.d("GET", bills.toString())
-        }catch (e: Exception){
-            Log.e("GET", "Error obteniendo los Bills", e)
-        }
-
         /*
         var hola = TotalEntity(1000,0, 152.0F, 0)
         var listita:List<TotalEntity> = listOf(hola)
@@ -80,20 +76,16 @@ class MainActivity : AppCompatActivity() {
                 Log.d("DB_TEST", "ID: ${it.idTotal}, Moneda: ${it.idCurrency}, Monto: ${it.totalAmount}, Cuenta: ${it.idAccount}")
             }
         }*/
-
-
     }
 
     private fun initUI(){
         initNavigation()
-        binding.tvPesos.text = String.format("%.2f", pesos)
+        binding.tvPesos.text = "$" + String.format("%.2f", pesos)
 
         CoroutineScope(Dispatchers.IO).launch {
             dolares = totalViewModel.pesosToDollar(pesos)
-            Log.d("DOLAR", dolares.toString())
             runOnUiThread{
-                Log.d("DOLAR", dolares.toString())
-                binding.tvDollar.text = String.format("%.2f", dolares)
+                binding.tvDollar.text = "$" + String.format("%.2f", dolares)
             }
         }
 

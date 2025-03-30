@@ -98,4 +98,18 @@ class TotalRepository @Inject constructor(
         return billDao.getAllBills()
     }
 
+    suspend fun getAllAccounts(): List<AccountEntity> {
+        return accountDao.getAllAccount()
+    }
+
+    suspend fun getAllCurrencies(): List<CurrencyEntity>{
+        return currencyDao.getAllCurrencies()
+    }
+
+    suspend fun getAllAccountsNames(): List<String> {
+        return accountDao.getAllAccountNames()
+    }
+
+
+
 }
