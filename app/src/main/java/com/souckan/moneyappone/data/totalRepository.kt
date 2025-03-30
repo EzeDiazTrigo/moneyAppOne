@@ -55,7 +55,7 @@ class TotalRepository @Inject constructor(
         var currencyAccount = currencyDao.getCurrencyByCode(currencyCode)?.idCurrency
         if (account == null) {
             val newAccount =
-                currencyAccount?.let { AccountEntity(accountName = accountName, idCurrency = it) }
+                currencyAccount?.let { AccountEntity(accountName = "${accountName} (${currencyCode})", idCurrency = it) }
             if (newAccount != null) {
                 accountDao.insertAll(newAccount)
             }
@@ -121,6 +121,11 @@ class TotalRepository @Inject constructor(
     suspend fun getAllCurrenciesNames(): List<String> {
         return currencyDao.getAllCurrenciesNames()
     }
+
+    suspend fun getAccountNameById(id:Int):String{
+        return accountDao.getAccountNameById(id)
+    }
+
 
 
 

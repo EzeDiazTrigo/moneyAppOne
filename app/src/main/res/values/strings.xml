@@ -20,4 +20,6 @@
     <string name="date">Fecha</string>
     <string name="description">Descripción</string>
 
+    <string name="accoutn_not_found">Cuenta no encontrada</string>
+
 </resources>

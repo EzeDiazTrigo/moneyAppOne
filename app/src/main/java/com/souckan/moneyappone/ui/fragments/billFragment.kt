@@ -13,10 +13,12 @@ import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.InvalidationTracker
 import com.souckan.moneyappone.R
 import com.souckan.moneyappone.databinding.DialogAddBillBinding
 import com.souckan.moneyappone.databinding.FragmentBillBinding
+import com.souckan.moneyappone.ui.fragments.Adapters.BillAdapter
 import com.souckan.moneyappone.ui.viewmodels.TotalViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
@@ -25,14 +27,27 @@ import java.util.Calendar
 class billFragment : Fragment() {
 
     private val totalViewModel: TotalViewModel by viewModels()
+    private lateinit var billAdapter: BillAdapter
     private lateinit var _binding: FragmentBillBinding
     private val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Inicializar el RecyclerView y el Adapter
+        billAdapter = BillAdapter(mutableListOf())
+        binding.rvBills.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvBills.adapter = billAdapter
+
+        // Observar los datos del ViewModel
+        totalViewModel.getAllBills().observe(viewLifecycleOwner, Observer { bills ->
+            billAdapter.updateBills(bills.toMutableList())
+        })
+
         binding.addBillButton.setOnClickListener{
             showBillDialog()
         }
+
     }
 
 
@@ -118,7 +133,7 @@ class billFragment : Fragment() {
             val amount: Float = amountText.toFloatOrNull() ?: 0f
             val billDate = formattedDate.toString()
             val description = bindingDialog.edDescription.text.toString()
-            totalViewModel.insertBill(currencyCode = currencyCode, accountName = "${accountName} (${currencyCode})", amount = amount, billDate = billDate, description = description)
+            totalViewModel.insertBill(currencyCode = currencyCode, accountName = accountName, amount = amount, billDate = billDate, description = description)
             dialog.hide()
         }
 

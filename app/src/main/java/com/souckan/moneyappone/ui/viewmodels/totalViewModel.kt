@@ -49,10 +49,7 @@ class TotalViewModel @Inject constructor(
 
     suspend fun getDollarPrice():Float{
         return repository.getDollarPrice()
-
     }
-
-
 
     fun getAllAccounts() = liveData(Dispatchers.IO) {
         emit(repository.getAllAccounts())
@@ -68,6 +65,10 @@ class TotalViewModel @Inject constructor(
 
     fun getAllCurrencies() = liveData(Dispatchers.IO) {
         emit(repository.getAllCurrencies())
+    }
+
+    fun getAccountNameById(id:Int) = liveData(Dispatchers.IO) {
+        emit(repository.getAccountNameById(id))
     }
 
 }

@@ -43,14 +43,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initUI()
-        val currencyCode = "ARG"
-        val accountName = "GALICIA"
-        val amount = 200.0F
-        val billDate = "20250329"
-        val description = "Compra de prueba"
-        totalViewModel.insertBill(currencyCode = currencyCode, accountName = "${accountName} (${currencyCode})", amount = amount, billDate = billDate, description = description)
-        Log.d("INSERT", "Bill insertado correctamente")
-        val accounts = totalViewModel.getAllAccountsNames()
 
 
         totalViewModel.getAllAccountsNames().observe(this) { totals ->

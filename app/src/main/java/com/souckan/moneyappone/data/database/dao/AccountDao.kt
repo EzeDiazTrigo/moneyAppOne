@@ -23,5 +23,7 @@ interface AccountDao {
     @Query("SELECT * FROM account_table WHERE accountName = :accountName AND idCurrency = :idCurrency LIMIT 1")
     suspend fun getAccountByName(accountName: String, idCurrency:Int): AccountEntity?
 
+    @Query("SELECT accountName FROM account_table WHERE idAccount = :id LIMIT 1")
+    suspend fun getAccountNameById(id:Int):String
 
 }
