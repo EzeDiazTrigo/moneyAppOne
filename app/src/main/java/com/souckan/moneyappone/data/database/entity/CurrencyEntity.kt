@@ -11,7 +11,7 @@ data class CurrencyEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "idCurrency") val idCurrency:Int = 0,
     @ColumnInfo(name = "currencyName") val currencyName:String,
-    @ColumnInfo(name = "dollarPrice") val dollarPrice:Float
+    @ColumnInfo(name = "dollarPrice") var dollarPrice:Float
 ){
     constructor() : this(0, "", 1.0F)
 }

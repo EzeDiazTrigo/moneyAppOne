@@ -29,6 +29,21 @@ class TotalRepository @Inject constructor(
         totalDao.insertAll(total)
     }
 
+    suspend fun insertCurrency(currency: CurrencyEntity) {
+        var currencyName = currencyDao.getCurrencyByCode(currency.currencyName)
+        if(currencyName == null) {
+            currencyDao.insertAll(currency)
+        }
+        if (currencyName != null) {
+            if(currencyName.currencyName == "ARS"){
+                currencyName.dollarPrice = currency.dollarPrice
+                currencyDao.insertAll(currencyName)
+            }
+        }
+
+    }
+
+
     suspend fun deleteAllTotals() {
         totalDao.deleteAllTotals()
     }

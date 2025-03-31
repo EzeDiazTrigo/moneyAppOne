@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.souckan.moneyappone.data.database.entity.CurrencyEntity
+import com.souckan.moneyappone.data.database.entity.TotalEntity
 import java.util.Currency
 
 @Dao
@@ -23,4 +24,6 @@ interface CurrencyDao {
 
     @Query("SELECT * FROM currency_table WHERE currencyName = :code LIMIT 1")
     suspend fun getCurrencyByCode(code: String): CurrencyEntity?
+
+
 }

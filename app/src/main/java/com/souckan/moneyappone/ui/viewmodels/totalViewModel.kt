@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.souckan.moneyappone.data.database.entity.AccountEntity
+import com.souckan.moneyappone.data.database.entity.CurrencyEntity
 import com.souckan.moneyappone.data.database.entity.TotalEntity
 import com.souckan.moneyappone.data.repository.TotalRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +24,12 @@ class TotalViewModel @Inject constructor(
     fun insertAll(total: List<TotalEntity>) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertAll(total)
+        }
+    }
+
+    fun insertCurrency(currency: CurrencyEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.insertCurrency(currency)
         }
     }
 
