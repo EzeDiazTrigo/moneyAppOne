@@ -19,7 +19,11 @@
         android:id="@+id/totalFragment"
         android:name="com.souckan.moneyappone.ui.fragments.totalFragment"
         android:label="fragment_total"
-        tools:layout="@layout/fragment_total" />
+        tools:layout="@layout/fragment_total" >
+        <action
+            android:id="@+id/action_totalFragment_to_totalDetailActivity2"
+            app:destination="@id/totalDetailActivity" />
+    </fragment>
     <fragment
         android:id="@+id/debtFragment"
         android:name="com.souckan.moneyappone.ui.fragments.debtFragment"
