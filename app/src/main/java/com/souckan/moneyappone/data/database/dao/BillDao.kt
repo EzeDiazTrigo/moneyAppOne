@@ -18,4 +18,7 @@ interface BillDao {
     @Query("DELETE FROM bill_table")
     suspend fun deleteAllBills()
 
+    @Query("SELECT * FROM bill_table WHERE idAccount = :idAccount ORDER BY billDate DESC")
+    suspend fun getAllBillByAccount(idAccount:Int):List<BillEntity>
+
 }

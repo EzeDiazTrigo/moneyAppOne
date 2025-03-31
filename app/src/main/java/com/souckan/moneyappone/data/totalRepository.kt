@@ -25,6 +25,10 @@ class TotalRepository @Inject constructor(
         return totalDao.getAllTotals()
     }
 
+    suspend fun getAllBillByAccount(idAccount:Int):List<BillEntity>{
+        return billDao.getAllBillByAccount(idAccount)
+    }
+
     suspend fun insertAll(total: List<TotalEntity>) {
         totalDao.insertAll(total)
     }

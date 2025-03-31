@@ -25,4 +25,9 @@
         android:name="com.souckan.moneyappone.ui.fragments.debtFragment"
         android:label="fragment_debt"
         tools:layout="@layout/fragment_debt" />
+    <activity
+        android:id="@+id/totalDetailActivity"
+        android:name="com.souckan.moneyappone.ui.detail.TotalDetailActivity"
+        android:label="activity_total_detail"
+        tools:layout="@layout/activity_total_detail" />
 </navigation>

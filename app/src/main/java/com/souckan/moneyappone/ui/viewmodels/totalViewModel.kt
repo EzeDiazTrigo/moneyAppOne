@@ -21,6 +21,10 @@ class TotalViewModel @Inject constructor(
         emit(repository.getAllTotals())
     }
 
+    fun getAllBillByAccount(idAccount:Int) = liveData(Dispatchers.IO) {
+        emit(repository.getAllBillByAccount(idAccount))
+    }
+
     fun insertAll(total: List<TotalEntity>) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertAll(total)
