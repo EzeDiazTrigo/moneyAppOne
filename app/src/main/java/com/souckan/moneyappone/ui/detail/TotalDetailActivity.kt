@@ -1,17 +1,23 @@
 package com.souckan.moneyappone.ui.detail
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.souckan.moneyappone.R
+import com.souckan.moneyappone.data.database.entity.BillEntity
+import androidx.lifecycle.Observer
 import com.souckan.moneyappone.databinding.ActivityMainBinding
 import com.souckan.moneyappone.databinding.ActivityTotalDetailBinding
+import com.souckan.moneyappone.ui.fragments.Adapters.BillAdapter
+import com.souckan.moneyappone.ui.fragments.Adapters.TotalDetailAdapter
 import com.souckan.moneyappone.ui.viewmodels.TotalViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.properties.Delegates
@@ -22,7 +28,7 @@ class TotalDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTotalDetailBinding
     private val totalViewModel: TotalViewModel by viewModels()
     private lateinit var totalDetailAdapter: TotalDetailAdapter
-    private var idAccount by Delegates.notNull<Int>()
+    private var idAccount: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,20 +36,30 @@ class TotalDetailActivity : AppCompatActivity() {
         binding = ActivityTotalDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initUI()
 
-        idAccount = (intent.getStringExtra("idAccount") ?: return) as Int
+        idAccount = intent.getIntExtra("idAccount", -1)
+        Log.d("ACCOUNT ID", idAccount.toString())
 
-        // Configurar RecyclerView
+        // Inicializar el RecyclerView y el Adapter
         totalDetailAdapter = TotalDetailAdapter(mutableListOf())
-        findViewById<RecyclerView>(R.id.rvBills).apply {
-            layoutManager = LinearLayoutManager(this@TotalDetailActivity)
-            adapter = totalDetailAdapter
-        }
+        binding.rvTotalDetail.layoutManager = LinearLayoutManager(this)
+        binding.rvTotalDetail.adapter = totalDetailAdapter
 
-        // Obtener ViewModel y observar las `bills`
-        //totalViewModel = ViewModelProvider(this).get(TotalViewModel::class.java)
-        totalViewModel.getAllBillByAccount(idAccount).observe(this) { bills ->
-            totalDetailAdapter.updateBills(bills.toMutableList())
+        // Observar los datos del ViewModel
+        totalViewModel.getAllBillByAccount(idAccount).observe(this, Observer { bills ->
+            Log.d("BILLS LOADED", "Bills: $bills")
+            totalDetailAdapter.updateTotalDetails(bills.toMutableList())
+        })
+
+
+    }
+
+    private fun initUI() {
+        binding.ivBackToTotal.setOnClickListener{
+            onBackPressed()
         }
+        val title = getString(R.string.account)
+        binding.tvTitleTotalDetail.text = "${title}:${idAccount}"
     }
 }

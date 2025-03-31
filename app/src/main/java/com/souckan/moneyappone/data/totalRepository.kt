@@ -141,7 +141,7 @@ class TotalRepository @Inject constructor(
         return currencyDao.getAllCurrenciesNames()
     }
 
-    suspend fun getAccountNameById(id:Int):String{
+    suspend fun getAccountNameById(id:Int):AccountEntity{
         return accountDao.getAccountNameById(id)
     }
 
