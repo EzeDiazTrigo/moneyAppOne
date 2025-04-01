@@ -56,7 +56,7 @@ class TotalDetailActivity : AppCompatActivity() {
     }
 
     private fun initUI() {
-        binding.ivBackToTotal.setOnClickListener{
+        binding.ivBackToTotal.setOnClickListener {
             onBackPressed()
         }
         val title = getString(R.string.account)

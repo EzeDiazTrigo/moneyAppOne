@@ -38,13 +38,11 @@ class totalFragment : Fragment() {
 
         // Observar los datos del ViewModel
         totalViewModel.getAllTotals().observe(viewLifecycleOwner) { totals ->
-        totalAdapter.updateTotal(totals.toMutableList())
+            totalAdapter.updateTotal(totals.toMutableList())
         }
 
 
     }
-
-
 
 
     override fun onCreateView(

@@ -14,10 +14,12 @@ import com.souckan.moneyappone.databinding.ItemTotalDetailBinding
 class TotalDetailAdapter(private val bills: MutableList<BillEntity>) :
     RecyclerView.Adapter<TotalDetailAdapter.TotalDetailViewHolder>() {
 
-    class TotalDetailViewHolder(val binding: ItemTotalDetailBinding) : RecyclerView.ViewHolder(binding.root)
+    class TotalDetailViewHolder(val binding: ItemTotalDetailBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TotalDetailViewHolder {
-        val binding = ItemTotalDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemTotalDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TotalDetailViewHolder(binding)
     }
 

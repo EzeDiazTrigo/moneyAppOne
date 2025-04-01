@@ -22,7 +22,7 @@ object NetworkModule {
     }
 
     @Provides
-    fun provideHoroscopeApiService(retrofit: Retrofit):DollarAPIService{
+    fun provideHoroscopeApiService(retrofit: Retrofit): DollarAPIService {
         return retrofit.create(DollarAPIService::class.java)
     }
 }

@@ -11,10 +11,10 @@ import java.util.Currency
 @Dao
 interface CurrencyDao {
     @Query("SELECT * FROM currency_table")
-    suspend fun getAllCurrencies():List<CurrencyEntity>
+    suspend fun getAllCurrencies(): List<CurrencyEntity>
 
     @Query("SELECT currencyName FROM currency_table")
-    suspend fun getAllCurrenciesNames():List<String>
+    suspend fun getAllCurrenciesNames(): List<String>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(currency: CurrencyEntity)

@@ -25,7 +25,7 @@ class TotalRepository @Inject constructor(
         return totalDao.getAllTotals()
     }
 
-    suspend fun getAllBillByAccount(idAccount:Int):List<BillEntity>{
+    suspend fun getAllBillByAccount(idAccount: Int): List<BillEntity> {
         return billDao.getAllBillByAccount(idAccount)
     }
 
@@ -35,11 +35,11 @@ class TotalRepository @Inject constructor(
 
     suspend fun insertCurrency(currency: CurrencyEntity) {
         var currencyName = currencyDao.getCurrencyByCode(currency.currencyName)
-        if(currencyName == null) {
+        if (currencyName == null) {
             currencyDao.insertAll(currency)
         }
         if (currencyName != null) {
-            if(currencyName.currencyName == "ARS"){
+            if (currencyName.currencyName == "ARS") {
                 currencyName.dollarPrice = currency.dollarPrice
                 currencyDao.insertAll(currencyName)
             }
@@ -53,7 +53,7 @@ class TotalRepository @Inject constructor(
     }
 
     //Llamar APIs para obtenerlo
-    suspend fun getDollarPrice():Float{
+    suspend fun getDollarPrice(): Float {
         return withContext(Dispatchers.IO) {
             val call = provideRetrofit().create(DollarAPIService::class.java).getDollarPrice("blue")
             val response = call.body()
@@ -66,15 +66,25 @@ class TotalRepository @Inject constructor(
     }
 
 
-
-    suspend fun insertBill(currencyCode: String, accountName: String,amount: Float, billDate: String, description:String) {
+    suspend fun insertBill(
+        currencyCode: String,
+        accountName: String,
+        amount: Float,
+        billDate: String,
+        description: String
+    ) {
         // Verificar si la cuenta existe, si no, crearla
         var currency = currencyDao.getCurrencyByCode(currencyCode)
         var account = currency?.let { accountDao.getAccountByName(accountName, it.idCurrency) }
         var currencyAccount = currencyDao.getCurrencyByCode(currencyCode)?.idCurrency
         if (account == null) {
             val newAccount =
-                currencyAccount?.let { AccountEntity(accountName = "${accountName} (${currencyCode})", idCurrency = it) }
+                currencyAccount?.let {
+                    AccountEntity(
+                        accountName = "${accountName} (${currencyCode})",
+                        idCurrency = it
+                    )
+                }
             if (newAccount != null) {
                 accountDao.insertAll(newAccount)
             }
@@ -85,29 +95,58 @@ class TotalRepository @Inject constructor(
 
         // Verificar si la moneda existe, si no, crearla
 
-        var currentDollarPrice:Float = 1.0F
+        var currentDollarPrice: Float = 1.0F
         if (currency == null) {
-            when(currencyCode){
-                "USD" -> { currentDollarPrice = 1.0F }
-                "ARG" -> { currentDollarPrice = getDollarPrice() }
+            when (currencyCode) {
+                "USD" -> {
+                    currentDollarPrice = 1.0F
+                }
+
+                "ARG" -> {
+                    currentDollarPrice = getDollarPrice()
+                }
             }
-            val newCurrency = CurrencyEntity(currencyName = currencyCode, dollarPrice = currentDollarPrice)
+            val newCurrency =
+                CurrencyEntity(currencyName = currencyCode, dollarPrice = currentDollarPrice)
             currencyDao.insertAll(newCurrency)
             currency = currencyDao.getCurrencyByCode(currencyCode) // Obtener el nuevo ID
         }
 
         // Insertar el nuevo Bill
-        val bill = account?.let { currency?.idCurrency?.let { it1 -> BillEntity(idCurrency = it1, idAccount = it.idAccount, amount = amount, billDate = billDate, description = description) } }
+        val bill = account?.let {
+            currency?.idCurrency?.let { it1 ->
+                BillEntity(
+                    idCurrency = it1,
+                    idAccount = it.idAccount,
+                    amount = amount,
+                    billDate = billDate,
+                    description = description
+                )
+            }
+        }
         if (bill != null) {
             billDao.insertAll(bill)
         }
 
         // Verificar si ya existe un total para esta cuenta y moneda
-        var total = account?.let { currency?.let { it1 -> totalDao.getTotalByAccountAndCurrency(it.idAccount, it1.idCurrency) } }
+        var total = account?.let {
+            currency?.let { it1 ->
+                totalDao.getTotalByAccountAndCurrency(
+                    it.idAccount,
+                    it1.idCurrency
+                )
+            }
+        }
         if (total == null) {
             if (account != null) {
                 if (currency != null) {
-                    totalDao.updateTotal(TotalEntity(idCurrency = currency.idCurrency,  totalAmount = amount, idAccount = account.idAccount))
+                    totalDao.updateTotal(
+                        TotalEntity(
+                            idCurrency = currency.idCurrency,
+                            totalAmount = amount,
+                            idAccount = account.idAccount
+                        )
+                    )
                 }
             }
         }
@@ -129,7 +168,7 @@ class TotalRepository @Inject constructor(
         return accountDao.getAllAccount()
     }
 
-    suspend fun getAllCurrencies(): List<CurrencyEntity>{
+    suspend fun getAllCurrencies(): List<CurrencyEntity> {
         return currencyDao.getAllCurrencies()
     }
 
@@ -141,11 +180,9 @@ class TotalRepository @Inject constructor(
         return currencyDao.getAllCurrenciesNames()
     }
 
-    suspend fun getAccountNameById(id:Int):AccountEntity{
+    suspend fun getAccountNameById(id: Int): AccountEntity {
         return accountDao.getAccountNameById(id)
     }
-
-
 
 
 }

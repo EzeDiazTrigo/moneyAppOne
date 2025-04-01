@@ -20,11 +20,12 @@ object RoomModule {
 
     @Singleton
     @Provides
-    fun provideRoom(@ApplicationContext context: Context) = Room.databaseBuilder(context, TotalDatabase::class.java, TOTAL_DATABASE_NAME).build()
+    fun provideRoom(@ApplicationContext context: Context) =
+        Room.databaseBuilder(context, TotalDatabase::class.java, TOTAL_DATABASE_NAME).build()
 
     @Singleton
     @Provides
-    fun provideTotalDao(db:TotalDatabase) = db.getTotalDao()
+    fun provideTotalDao(db: TotalDatabase) = db.getTotalDao()
 
     @Singleton
     @Provides

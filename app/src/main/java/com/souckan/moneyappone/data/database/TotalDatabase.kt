@@ -19,12 +19,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [TotalEntity::class, BillEntity::class, CurrencyEntity::class, AccountEntity::class], version = 1, exportSchema = false)
+@Database(
+    entities = [TotalEntity::class, BillEntity::class, CurrencyEntity::class, AccountEntity::class],
+    version = 1,
+    exportSchema = false
+)
 @TypeConverters(Converters::class)
-abstract class TotalDatabase:RoomDatabase() {
-    abstract fun getTotalDao():TotalDao
-    abstract fun getCurrencyDao():CurrencyDao
-    abstract fun getBillDao():BillDao
-    abstract fun getAccountDao():AccountDao
+abstract class TotalDatabase : RoomDatabase() {
+    abstract fun getTotalDao(): TotalDao
+    abstract fun getCurrencyDao(): CurrencyDao
+    abstract fun getBillDao(): BillDao
+    abstract fun getAccountDao(): AccountDao
 }
 

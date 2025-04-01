@@ -15,7 +15,8 @@ class BillAdapter(private val bills: MutableList<BillEntity>) :
     class BillViewHolder(val binding: ItamCardBillBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BillViewHolder {
-        val binding = ItamCardBillBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItamCardBillBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return BillViewHolder(binding)
     }
 

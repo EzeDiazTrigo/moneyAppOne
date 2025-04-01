@@ -21,7 +21,7 @@ class TotalViewModel @Inject constructor(
         emit(repository.getAllTotals())
     }
 
-    fun getAllBillByAccount(idAccount:Int) = liveData(Dispatchers.IO) {
+    fun getAllBillByAccount(idAccount: Int) = liveData(Dispatchers.IO) {
         emit(repository.getAllBillByAccount(idAccount))
     }
 
@@ -43,7 +43,13 @@ class TotalViewModel @Inject constructor(
         }
     }
 
-    fun insertBill(amount: Float, accountName: String, currencyCode: String, billDate:String, description:String) {
+    fun insertBill(
+        amount: Float,
+        accountName: String,
+        currencyCode: String,
+        billDate: String,
+        description: String
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertBill(currencyCode, accountName, amount, billDate, description)
         }
@@ -53,12 +59,12 @@ class TotalViewModel @Inject constructor(
         emit(repository.getAllBills())
     }
 
-    suspend fun pesosToDollar(amount:Float):Float{
+    suspend fun pesosToDollar(amount: Float): Float {
         val dollarPrice = repository.getDollarPrice()
-        return  amount / dollarPrice
+        return amount / dollarPrice
     }
 
-    suspend fun getDollarPrice():Float{
+    suspend fun getDollarPrice(): Float {
         return repository.getDollarPrice()
     }
 
@@ -66,7 +72,7 @@ class TotalViewModel @Inject constructor(
         emit(repository.getAllAccounts())
     }
 
-    fun getAllAccountsNames()= liveData(Dispatchers.IO) {
+    fun getAllAccountsNames() = liveData(Dispatchers.IO) {
         emit(repository.getAllAccountsNames())
     }
 
@@ -78,7 +84,7 @@ class TotalViewModel @Inject constructor(
         emit(repository.getAllCurrencies())
     }
 
-    fun getAccountNameById(id:Int) = liveData(Dispatchers.IO) {
+    fun getAccountNameById(id: Int) = liveData(Dispatchers.IO) {
         emit(repository.getAccountNameById(id))
     }
 

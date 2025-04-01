@@ -9,9 +9,9 @@ import androidx.room.PrimaryKey
 
 data class CurrencyEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "idCurrency") val idCurrency:Int = 0,
-    @ColumnInfo(name = "currencyName") val currencyName:String,
-    @ColumnInfo(name = "dollarPrice") var dollarPrice:Float
-){
+    @ColumnInfo(name = "idCurrency") val idCurrency: Int = 0,
+    @ColumnInfo(name = "currencyName") val currencyName: String,
+    @ColumnInfo(name = "dollarPrice") var dollarPrice: Float
+) {
     constructor() : this(0, "", 1.0F)
 }

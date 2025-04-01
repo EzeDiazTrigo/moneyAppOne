@@ -10,7 +10,7 @@ import androidx.room.Query
 interface BillDao {
 
     @Query("SELECT * FROM bill_table ORDER BY billDate DESC")
-    suspend fun getAllBills():List<BillEntity>
+    suspend fun getAllBills(): List<BillEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(bill: BillEntity)
@@ -19,6 +19,6 @@ interface BillDao {
     suspend fun deleteAllBills()
 
     @Query("SELECT * FROM bill_table WHERE idAccount = :idAccount ORDER BY billDate DESC")
-    suspend fun getAllBillByAccount(idAccount:Int):List<BillEntity>
+    suspend fun getAllBillByAccount(idAccount: Int): List<BillEntity>
 
 }

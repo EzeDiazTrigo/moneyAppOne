@@ -22,7 +22,8 @@ class TotalAdapter(
     class TotalViewHolder(val binding: ItemCardTotalBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TotalViewHolder {
-        val binding = ItemCardTotalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemCardTotalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TotalViewHolder(binding)
     }
 
@@ -33,7 +34,10 @@ class TotalAdapter(
         // Manejar el clic para abrir la nueva pantalla con las `bills`
         holder.itemView.setOnClickListener { view ->
             val navController = Navigation.findNavController(view)
-            navController.navigate(R.id.action_totalFragment_to_totalDetailActivity2, bundleOf("idAccount" to total.idAccount))
+            navController.navigate(
+                R.id.action_totalFragment_to_totalDetailActivity2,
+                bundleOf("idAccount" to total.idAccount)
+            )
         }
 
     }
@@ -46,7 +50,6 @@ class TotalAdapter(
         notifyDataSetChanged()
     }
 }
-
 
 
 /*class TotalAdapter(private val totals: MutableList<TotalEntity>, private val onItemSelected:(BillEntity)->Unit) :

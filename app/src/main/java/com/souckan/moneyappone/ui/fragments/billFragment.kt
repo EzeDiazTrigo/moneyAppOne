@@ -44,15 +44,14 @@ class billFragment : Fragment() {
             billAdapter.updateBills(bills.toMutableList())
         })
 
-        binding.addBillButton.setOnClickListener{
+        binding.addBillButton.setOnClickListener {
             showBillDialog()
         }
 
     }
 
 
-
-    private fun showBillDialog(){
+    private fun showBillDialog() {
         val dialog = Dialog(requireContext())
         dialog.setContentView(R.layout.dialog_add_bill)
 
@@ -66,24 +65,25 @@ class billFragment : Fragment() {
         )
         var formattedDate: String? = null
         bindingDialog.edDate.setOnClickListener {
-                    val calendar = Calendar.getInstance()
-                    val year = calendar.get(Calendar.YEAR)
-                    val month = calendar.get(Calendar.MONTH)
-                    val day = calendar.get(Calendar.DAY_OF_MONTH)
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-                    val datePickerDialog = DatePickerDialog(
-                        requireContext(),
-                        { _, selectedYear, selectedMonth, selectedDay ->
-                            val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
-                            bindingDialog.edDate.setText(selectedDate)
-                            formattedDate = String.format("%04d%02d%02d", selectedYear, selectedMonth + 1, selectedDay)
-                            Log.d("DatePicker", "Fecha seleccionada en formato yyyymmdd: $formattedDate")
-                        },
-                        year, month, day
+            val datePickerDialog = DatePickerDialog(
+                requireContext(),
+                { _, selectedYear, selectedMonth, selectedDay ->
+                    val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                    bindingDialog.edDate.setText(selectedDate)
+                    formattedDate =
+                        String.format("%04d%02d%02d", selectedYear, selectedMonth + 1, selectedDay)
+                    Log.d("DatePicker", "Fecha seleccionada en formato yyyymmdd: $formattedDate")
+                },
+                year, month, day
 
-                    )
-                    datePickerDialog.show()
-                }
+            )
+            datePickerDialog.show()
+        }
         //Desplegable Account
         val accounts = totalViewModel.getAllAccountsNames()
         bindingDialog.acAccount.setOnClickListener {
@@ -91,8 +91,12 @@ class billFragment : Fragment() {
         }
         accounts.observe(viewLifecycleOwner, Observer { optionsNames ->
             Log.d("AutoComplete", "Opciones recibidas: $optionsNames") // Verificar datos
-            if(optionsNames.isNotEmpty()){
-                val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, optionsNames)
+            if (optionsNames.isNotEmpty()) {
+                val adapter = ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_dropdown_item_1line,
+                    optionsNames
+                )
                 bindingDialog.acAccount.setAdapter(adapter)
             }
         })
@@ -103,7 +107,11 @@ class billFragment : Fragment() {
             Log.d("AutoComplete", "Opciones recibidas: $optionsNames") // Verificar datos
 
             if (optionsNames.isNotEmpty()) {
-                val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, optionsNames)
+                val adapter = ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_dropdown_item_1line,
+                    optionsNames
+                )
                 bindingDialog.acCurrency.setAdapter(adapter)
 
                 // Evitar que el usuario escriba valores que no estén en la lista
@@ -117,7 +125,6 @@ class billFragment : Fragment() {
                 }
 
 
-
                 // Mostrar la lista al hacer clic
                 bindingDialog.acCurrency.setOnClickListener {
                     bindingDialog.acCurrency.showDropDown()
@@ -126,14 +133,20 @@ class billFragment : Fragment() {
         })
 
 
-        bindingDialog.btnAddBill.setOnClickListener{
+        bindingDialog.btnAddBill.setOnClickListener {
             val currencyCode = bindingDialog.acCurrency.text.toString()
             val accountName = bindingDialog.acAccount.text.toString()
             val amountText = bindingDialog.edAmount.text.toString()
             val amount: Float = amountText.toFloatOrNull() ?: 0f
             val billDate = formattedDate.toString()
             val description = bindingDialog.edDescription.text.toString()
-            totalViewModel.insertBill(currencyCode = currencyCode, accountName = accountName, amount = amount, billDate = billDate, description = description)
+            totalViewModel.insertBill(
+                currencyCode = currencyCode,
+                accountName = accountName,
+                amount = amount,
+                billDate = billDate,
+                description = description
+            )
             dialog.hide()
         }
 

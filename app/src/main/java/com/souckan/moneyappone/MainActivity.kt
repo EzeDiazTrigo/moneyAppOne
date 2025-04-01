@@ -35,7 +35,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -44,9 +43,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     val FIRST_KEY: String = "FIRST"
-    var pesos:Float = 1468000.0F
-    var dolares:Float = 0.0F
-    var dolarHoy:Float = 0.0F
+    var pesos: Float = 1468000.0F
+    var dolares: Float = 0.0F
+    var dolarHoy: Float = 0.0F
     var isFirstTime: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,31 +65,43 @@ class MainActivity : AppCompatActivity() {
 
         totalViewModel.getAllCurrencies().observe(this) { totals ->
             totals.forEach { total ->
-                Log.d("MONEDAS", "Moneda -> Cuenta: ${total.idCurrency}, Nombre: ${total.currencyName}, Precio dolar: ${total.dollarPrice}")
+                Log.d(
+                    "MONEDAS",
+                    "Moneda -> Cuenta: ${total.idCurrency}, Nombre: ${total.currencyName}, Precio dolar: ${total.dollarPrice}"
+                )
             }
         }
 
         totalViewModel.getAllBills().observe(this) { totals ->
             totals.forEach { total ->
-                Log.d("GASTOS", "Gasto -> Fecha: ${total.billDate}, Cuenta: ${total.idAccount}, Moneda: ${total.idCurrency}, Gasto: ${total.idBill}, Monto: ${total.amount}, Descripcion: ${total.description}")
+                Log.d(
+                    "GASTOS",
+                    "Gasto -> Fecha: ${total.billDate}, Cuenta: ${total.idAccount}, Moneda: ${total.idCurrency}, Gasto: ${total.idBill}, Monto: ${total.amount}, Descripcion: ${total.description}"
+                )
             }
         }
 
         totalViewModel.getAllAccounts().observe(this) { totals ->
             totals.forEach { total ->
-                Log.d("CUENTAS", "Cuenta -> Cuenta: ${total.idAccount}, Moneda: ${total.idCurrency}, Nombre: ${total.accountName}")
+                Log.d(
+                    "CUENTAS",
+                    "Cuenta -> Cuenta: ${total.idAccount}, Moneda: ${total.idCurrency}, Nombre: ${total.accountName}"
+                )
             }
         }
 
         totalViewModel.getAllTotals().observe(this) { totals ->
             totals.forEach { total ->
-                Log.d("TOTALES", "Total -> Cuenta: ${total.idAccount}, Moneda: ${total.idCurrency}, Total: ${total.idTotal}, Monto total: ${total.totalAmount}")
+                Log.d(
+                    "TOTALES",
+                    "Total -> Cuenta: ${total.idAccount}, Moneda: ${total.idCurrency}, Total: ${total.idTotal}, Monto total: ${total.totalAmount}"
+                )
             }
         }
 
     }
 
-    private fun initUI(){
+    private fun initUI() {
         initNavigation()
         binding.tvPesos.text = "$" + String.format("%.2f", pesos)
 
@@ -98,30 +109,59 @@ class MainActivity : AppCompatActivity() {
             dolares = totalViewModel.pesosToDollar(pesos)
             Log.d("DOLAR", dolares.toString())
 
-            runOnUiThread{
+            runOnUiThread {
                 binding.tvDollar.text = "$" + String.format("%.2f", dolares)
             }
         }
-        totalViewModel.insertCurrency(CurrencyEntity(idCurrency = 1, currencyName = "USD", dollarPrice = 1.0F))
-        totalViewModel.insertCurrency(CurrencyEntity(idCurrency = 2, currencyName = "USDT", dollarPrice = 1.0F))
-        totalViewModel.insertCurrency(CurrencyEntity(idCurrency = 3, currencyName = "USDC", dollarPrice = 1.0F))
-        totalViewModel.insertCurrency(CurrencyEntity(idCurrency = 4, currencyName = "DAI", dollarPrice = 1.0F))
+        totalViewModel.insertCurrency(
+            CurrencyEntity(
+                idCurrency = 1,
+                currencyName = "USD",
+                dollarPrice = 1.0F
+            )
+        )
+        totalViewModel.insertCurrency(
+            CurrencyEntity(
+                idCurrency = 2,
+                currencyName = "USDT",
+                dollarPrice = 1.0F
+            )
+        )
+        totalViewModel.insertCurrency(
+            CurrencyEntity(
+                idCurrency = 3,
+                currencyName = "USDC",
+                dollarPrice = 1.0F
+            )
+        )
+        totalViewModel.insertCurrency(
+            CurrencyEntity(
+                idCurrency = 4,
+                currencyName = "DAI",
+                dollarPrice = 1.0F
+            )
+        )
 
         CoroutineScope(Dispatchers.IO).launch {
             val currentDollarPrice = totalViewModel.getDollarPrice()
             Log.d("DOLARHOY", currentDollarPrice.toString())
-            runOnUiThread{
-                totalViewModel.insertCurrency(CurrencyEntity(idCurrency = 5, currencyName = "ARS", dollarPrice = currentDollarPrice))
+            runOnUiThread {
+                totalViewModel.insertCurrency(
+                    CurrencyEntity(
+                        idCurrency = 5,
+                        currencyName = "ARS",
+                        dollarPrice = currentDollarPrice
+                    )
+                )
             }
         }
 
 
-
-
     }
 
-    private fun initNavigation(){
-        val navHost = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+    private fun initNavigation() {
+        val navHost =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         navController = navHost.navController
         binding.buttonNavView.setupWithNavController(navController)
     }

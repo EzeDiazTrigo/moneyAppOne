@@ -10,7 +10,7 @@ import androidx.room.Query
 interface TotalDao {
 
     @Query("SELECT * FROM total_table ORDER BY idAccount DESC")
-    suspend fun getAllTotals():List<TotalEntity>
+    suspend fun getAllTotals(): List<TotalEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(total: List<TotalEntity>)
@@ -22,5 +22,5 @@ interface TotalDao {
     suspend fun deleteAllTotals()
 
     @Query("SELECT * FROM total_table WHERE idAccount = :account AND  idCurrency = :currency")
-    suspend fun getTotalByAccountAndCurrency(account:Int, currency:Int):TotalEntity
+    suspend fun getTotalByAccountAndCurrency(account: Int, currency: Int): TotalEntity
 }

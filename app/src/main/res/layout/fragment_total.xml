@@ -3,16 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.totalFragment"
-    android:background="@color/primary">
+    android:background="@color/primary"
+    tools:context=".ui.fragments.totalFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTotal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
+        android:layout_marginBottom="80dp"
         android:clipToPadding="false"
-        android:scrollbars="vertical"
-        android:layout_marginBottom="80dp" />
+        android:padding="16dp"
+        android:scrollbars="vertical" />
 
 </FrameLayout>
