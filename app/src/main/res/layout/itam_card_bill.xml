@@ -8,11 +8,20 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="6dp">
 
+    <ImageView
+        android:id="@+id/imRemove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_remove"
+        android:layout_gravity="end|top"
+        android:layout_margin="10dp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="16dp">
 
         <TextView
             android:id="@+id/tvAmount"

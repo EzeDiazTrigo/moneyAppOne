@@ -11,7 +11,7 @@ import com.souckan.moneyappone.databinding.ItamCardBillBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class BillAdapter(private val bills: MutableList<BillEntity>) :
+class BillAdapter(private val bills: MutableList<BillEntity>, private val onDeleteClick: (Int) -> Unit) :
     RecyclerView.Adapter<BillAdapter.BillViewHolder>() {
 
     class BillViewHolder(val binding: ItamCardBillBinding) : RecyclerView.ViewHolder(binding.root)
@@ -53,6 +53,14 @@ class BillAdapter(private val bills: MutableList<BillEntity>) :
         bills.clear()
         bills.addAll(newBills)
         notifyDataSetChanged()  // Notificar que los datos han cambiado
+    }
+
+    fun removeBill(billId: Int) {
+        val position = bills.indexOfFirst { it.idBill == billId }
+        if (position != -1) {
+            bills.removeAt(position)
+            notifyItemRemoved(position)
+        }
     }
 
 }

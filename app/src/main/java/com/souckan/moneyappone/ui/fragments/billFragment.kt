@@ -35,8 +35,9 @@ class billFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Inicializar el RecyclerView y el Adapter
-        billAdapter = BillAdapter(mutableListOf())
+        billAdapter = BillAdapter(mutableListOf()) { billId ->
+            totalViewModel.deleteBill(billId)
+        }
         binding.rvBills.layoutManager = LinearLayoutManager(requireContext())
         binding.rvBills.adapter = billAdapter
 
@@ -44,6 +45,8 @@ class billFragment : Fragment() {
         totalViewModel.getAllBills().observe(viewLifecycleOwner, Observer { bills ->
             billAdapter.updateBills(bills.toMutableList())
         })
+
+
 
         binding.addBillButton.setOnClickListener {
             showBillDialog()

@@ -91,4 +91,10 @@ class TotalViewModel @Inject constructor(
 
     val totalSumInDollars: LiveData<Double> = repository.totalSumInDollars
 
+    fun deleteBill(billId: Int) {
+        viewModelScope.launch {
+            repository.deleteBill(billId)
+        }
+    }
+
 }
