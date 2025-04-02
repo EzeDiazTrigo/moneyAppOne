@@ -36,10 +36,10 @@ class TotalDetailActivity : AppCompatActivity() {
         binding = ActivityTotalDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initUI()
-
         idAccount = intent.getIntExtra("idAccount", -1)
         Log.d("ACCOUNT ID", idAccount.toString())
+
+        initUI()
 
         // Inicializar el RecyclerView y el Adapter
         totalDetailAdapter = TotalDetailAdapter(mutableListOf())

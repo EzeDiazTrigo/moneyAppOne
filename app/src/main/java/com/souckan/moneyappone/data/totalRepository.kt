@@ -1,5 +1,6 @@
 package com.souckan.moneyappone.data.repository
 
+import androidx.lifecycle.LiveData
 import com.souckan.moneyappone.data.database.dao.AccountDao
 import com.souckan.moneyappone.data.database.dao.BillDao
 import com.souckan.moneyappone.data.database.dao.CurrencyDao
@@ -20,6 +21,7 @@ class TotalRepository @Inject constructor(
     private val currencyDao: CurrencyDao,
     private val billDao: BillDao
 ) {
+    val totalSumInDollars: LiveData<Double> = totalDao.getTotalSumInDollars()
 
     suspend fun getAllTotals(): List<TotalEntity> {
         return totalDao.getAllTotals()

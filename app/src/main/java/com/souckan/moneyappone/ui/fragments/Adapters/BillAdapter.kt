@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.souckan.moneyappone.R
 import com.souckan.moneyappone.data.database.entity.BillEntity
 import com.souckan.moneyappone.databinding.ItamCardBillBinding
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class BillAdapter(private val bills: MutableList<BillEntity>) :
     RecyclerView.Adapter<BillAdapter.BillViewHolder>() {
@@ -26,11 +28,18 @@ class BillAdapter(private val bills: MutableList<BillEntity>) :
         val accountLabel = holder.itemView.context.getString(R.string.account)
         val descriptionLabel = holder.itemView.context.getString(R.string.description)
         val dateLabel = holder.itemView.context.getString(R.string.date)
-
+        val inputFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         holder.binding.tvAmount.text = "$amountLabel: ${bill.amount}"
         holder.binding.tvAccount.text = "$accountLabel: ${bill.idAccount}"
         holder.binding.tvDescription.text = "$descriptionLabel: ${bill.description}"
-        holder.binding.tvDate.text = "$dateLabel: ${bill.billDate}"
+        val formattedDate = try {
+            val date = inputFormat.parse(bill.billDate)
+            date?.let { outputFormat.format(it) } ?: bill.billDate
+        } catch (e: Exception) {
+            bill.billDate // En caso de error, usa la fecha sin formato
+        }
+        holder.binding.tvDate.text = "$dateLabel: ${formattedDate}"
     }
 
     override fun getItemCount(): Int = bills.size

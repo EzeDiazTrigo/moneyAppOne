@@ -1,5 +1,6 @@
 package com.souckan.moneyappone.ui.viewmodels
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
@@ -87,5 +88,7 @@ class TotalViewModel @Inject constructor(
     fun getAccountNameById(id: Int) = liveData(Dispatchers.IO) {
         emit(repository.getAccountNameById(id))
     }
+
+    val totalSumInDollars: LiveData<Double> = repository.totalSumInDollars
 
 }

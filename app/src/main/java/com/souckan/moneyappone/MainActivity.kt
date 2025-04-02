@@ -39,7 +39,6 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private val totalViewModel: TotalViewModel by viewModels()
-    val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     val FIRST_KEY: String = "FIRST"
@@ -103,16 +102,30 @@ class MainActivity : AppCompatActivity() {
 
     private fun initUI() {
         initNavigation()
-        binding.tvPesos.text = "$" + String.format("%.2f", pesos)
 
-        CoroutineScope(Dispatchers.IO).launch {
+
+        totalViewModel.totalSumInDollars.observe(this) { sum ->
+            val totalFormatted = sum?.let { String.format("%.2f", it) } ?: "0.00"
+            binding.tvDollar.text = "$totalFormatted"
+            val totalDouble = totalFormatted.toFloat()
+            CoroutineScope(Dispatchers.IO).launch {
+                pesos = totalDouble * totalViewModel.getDollarPrice()
+                runOnUiThread{
+                    binding.tvPesos.text = "$" + String.format("%.2f", pesos)
+                }
+
+            }
+        }
+
+
+        /*
             dolares = totalViewModel.pesosToDollar(pesos)
             Log.d("DOLAR", dolares.toString())
 
             runOnUiThread {
                 binding.tvDollar.text = "$" + String.format("%.2f", dolares)
             }
-        }
+        }*/
         totalViewModel.insertCurrency(
             CurrencyEntity(
                 idCurrency = 1,
@@ -166,20 +179,6 @@ class MainActivity : AppCompatActivity() {
         binding.buttonNavView.setupWithNavController(navController)
     }
 
-
-    private fun getSettings(): Flow<SettingsData?> {
-        return dataStore.data.map { preferences ->
-            SettingsData(
-                isFirstTime = preferences[booleanPreferencesKey(FIRST_KEY)] ?: false
-            )
-        }
-    }
-
-    private suspend fun saveTheme(key: String, value: Boolean) {
-        dataStore.edit { preferences ->
-            preferences[booleanPreferencesKey(key)] = value
-        }
-    }
 
     /*private fun setCurrenciesOnce(){
         CoroutineScope(Dispatchers.IO).launch {

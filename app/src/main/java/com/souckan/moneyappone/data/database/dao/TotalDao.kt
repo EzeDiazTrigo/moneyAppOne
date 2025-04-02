@@ -1,5 +1,6 @@
 package com.souckan.moneyappone.data.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -23,4 +24,11 @@ interface TotalDao {
 
     @Query("SELECT * FROM total_table WHERE idAccount = :account AND  idCurrency = :currency")
     suspend fun getTotalByAccountAndCurrency(account: Int, currency: Int): TotalEntity
+
+    @Query("""
+    SELECT SUM(t.totalAmount / c.dollarPrice) 
+    FROM total_table t 
+    INNER JOIN currency_table c ON t.idCurrency = c.idCurrency
+""")
+    fun getTotalSumInDollars(): LiveData<Double>
 }
