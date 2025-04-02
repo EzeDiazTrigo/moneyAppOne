@@ -42,9 +42,9 @@ class billFragment : Fragment() {
         binding.rvBills.adapter = billAdapter
 
         // Observar los datos del ViewModel
-        totalViewModel.getAllBills().observe(viewLifecycleOwner, Observer { bills ->
+        totalViewModel.allBillsWithDetails.observe(viewLifecycleOwner) { bills ->
             billAdapter.updateBills(bills.toMutableList())
-        })
+        }
 
 
 

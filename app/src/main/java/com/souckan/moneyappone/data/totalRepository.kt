@@ -11,6 +11,7 @@ import com.souckan.moneyappone.data.database.entity.CurrencyEntity
 import com.souckan.moneyappone.data.database.entity.TotalEntity
 import com.souckan.moneyappone.data.network.DollarAPIService
 import com.souckan.moneyappone.data.network.NetworkModule.provideRetrofit
+import com.souckan.moneyappone.domain.model.BillWithDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -28,7 +29,11 @@ class TotalRepository @Inject constructor(
     }
 
     suspend fun deleteBill(billId: Int) {
-        billDao.deleteBill(billId)
+        val bill = billDao.getBillById(billId)
+        if (bill != null) {
+            billDao.subtractFromTotal(bill.idAccount, bill.amount)
+            billDao.deleteBill(bill)
+        }
     }
 
     suspend fun getAllBillByAccount(idAccount: Int): List<BillEntity> {
@@ -53,9 +58,17 @@ class TotalRepository @Inject constructor(
 
     }
 
+    fun getAllBillsWithDetails(): LiveData<List<BillWithDetails>> {
+        return billDao.getAllBillsWithDetails()
+    }
+
 
     suspend fun deleteAllTotals() {
         totalDao.deleteAllTotals()
+    }
+
+    fun getBillsByAccount(idAccount: Int): LiveData<List<BillWithDetails>> {
+        return billDao.getBillsByAccount(idAccount)
     }
 
     //Llamar APIs para obtenerlo

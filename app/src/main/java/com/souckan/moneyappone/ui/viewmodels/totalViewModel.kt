@@ -8,6 +8,7 @@ import com.souckan.moneyappone.data.database.entity.AccountEntity
 import com.souckan.moneyappone.data.database.entity.CurrencyEntity
 import com.souckan.moneyappone.data.database.entity.TotalEntity
 import com.souckan.moneyappone.data.repository.TotalRepository
+import com.souckan.moneyappone.domain.model.BillWithDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -85,6 +86,10 @@ class TotalViewModel @Inject constructor(
         emit(repository.getAllCurrencies())
     }
 
+    fun getBillsByAccount(idAccount: Int): LiveData<List<BillWithDetails>> {
+        return repository.getBillsByAccount(idAccount)
+    }
+
     fun getAccountNameById(id: Int) = liveData(Dispatchers.IO) {
         emit(repository.getAccountNameById(id))
     }
@@ -92,9 +97,12 @@ class TotalViewModel @Inject constructor(
     val totalSumInDollars: LiveData<Double> = repository.totalSumInDollars
 
     fun deleteBill(billId: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.deleteBill(billId)
         }
     }
+
+    val allBillsWithDetails: LiveData<List<BillWithDetails>> = repository.getAllBillsWithDetails()
+
 
 }

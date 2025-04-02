@@ -47,8 +47,7 @@ class TotalDetailActivity : AppCompatActivity() {
         binding.rvTotalDetail.adapter = totalDetailAdapter
 
         // Observar los datos del ViewModel
-        totalViewModel.getAllBillByAccount(idAccount).observe(this, Observer { bills ->
-            Log.d("BILLS LOADED", "Bills: $bills")
+        totalViewModel.getBillsByAccount(idAccount).observe(this, Observer { bills ->
             totalDetailAdapter.updateTotalDetails(bills.toMutableList())
         })
 

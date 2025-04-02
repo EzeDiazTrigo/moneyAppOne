@@ -1,17 +1,15 @@
 package com.souckan.moneyappone.ui.fragments.Adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.souckan.moneyappone.R
-import com.souckan.moneyappone.data.database.entity.BillEntity
-
+import com.souckan.moneyappone.domain.model.BillWithDetails
 import com.souckan.moneyappone.databinding.ItemTotalDetailBinding
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-
-class TotalDetailAdapter(private val bills: MutableList<BillEntity>) :
+class TotalDetailAdapter(private val bills: MutableList<BillWithDetails>) :
     RecyclerView.Adapter<TotalDetailAdapter.TotalDetailViewHolder>() {
 
     class TotalDetailViewHolder(val binding: ItemTotalDetailBinding) :
@@ -28,23 +26,37 @@ class TotalDetailAdapter(private val bills: MutableList<BillEntity>) :
         val amountLabel = holder.itemView.context.getString(R.string.amount)
         val descriptionLabel = holder.itemView.context.getString(R.string.description)
         val dateLabel = holder.itemView.context.getString(R.string.date)
+        val accountLabel = holder.itemView.context.getString(R.string.account)
+        val currencyLabel = holder.itemView.context.getString(R.string.currency)
+        val inputFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
-        holder.binding.tvAmount.text = "$amountLabel: ${bill.amount}"
+        if (bill.amount >= 0) {
+            holder.binding.tvAmount.text = "+ ${bill.amount} ${bill.currencyName}"
+        } else {
+            holder.binding.tvAmount.text = "- ${bill.amount * (-1)} ${bill.currencyName}"
+        }
         holder.binding.tvDescription.text = "$descriptionLabel: ${bill.description}"
-        holder.binding.tvDate.text = "$dateLabel: ${bill.billDate}"
+
+        val formattedDate = try {
+            val date = inputFormat.parse(bill.billDate)
+            date?.let { outputFormat.format(it) } ?: bill.billDate
+        } catch (e: Exception) {
+            bill.billDate
+        }
+        holder.binding.tvDate.text = "$dateLabel: ${formattedDate}"
     }
 
     override fun getItemCount(): Int = bills.size
 
-    fun addTotalDetail(bill: BillEntity) {
+    fun addTotalDetail(bill: BillWithDetails) {
         bills.add(0, bill) // Agregarlo al inicio para que se muestre arriba
         notifyItemInserted(0)
     }
 
-    fun updateTotalDetails(newTotalDetails: MutableList<BillEntity>) {
+    fun updateTotalDetails(newTotalDetails: MutableList<BillWithDetails>) {
         bills.clear()
         bills.addAll(newTotalDetails)
         notifyDataSetChanged()  // Notificar que los datos han cambiado
     }
-
 }
