@@ -30,7 +30,12 @@ class TotalAdapter(
 
     override fun onBindViewHolder(holder: TotalViewHolder, position: Int) {
         val total = totals[position]
-        holder.binding.tvAmount.text = "${total.accountName}: $${total.totalAmount}"
+        if(total.totalAmount >= 0){
+            holder.binding.tvAmount.text = "${total.accountName} (${total.currencyName}): $${total.totalAmount}"
+        }else{
+            holder.binding.tvAmount.text = "${total.accountName} (${total.currencyName}): $0.0 "
+        }
+
 
         // Manejar el clic para abrir la nueva pantalla con las `bills`
         holder.itemView.setOnClickListener { view ->

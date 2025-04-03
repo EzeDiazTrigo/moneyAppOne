@@ -95,15 +95,19 @@ class billFragment : Fragment() {
         }
         accounts.observe(viewLifecycleOwner, Observer { optionsNames ->
             Log.d("AutoComplete", "Opciones recibidas: $optionsNames") // Verificar datos
-            if (optionsNames.isNotEmpty()) {
+
+            val uniqueNames = optionsNames.distinct() // Filtra nombres repetidos
+
+            if (uniqueNames.isNotEmpty()) {
                 val adapter = ArrayAdapter(
                     requireContext(),
                     android.R.layout.simple_dropdown_item_1line,
-                    optionsNames
+                    uniqueNames
                 )
                 bindingDialog.acAccount.setAdapter(adapter)
             }
         })
+
 
         //Desplegable Currency
         val currency = totalViewModel.getAllCurrenciesNames()

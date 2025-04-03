@@ -103,7 +103,7 @@ class TotalRepository @Inject constructor(
             val newAccount =
                 currencyAccount?.let {
                     AccountEntity(
-                        accountName = "${accountName} (${currencyCode})",
+                        accountName = "${accountName}",
                         idCurrency = it
                     )
                 }
