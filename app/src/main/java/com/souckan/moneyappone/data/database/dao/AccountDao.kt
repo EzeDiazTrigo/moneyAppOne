@@ -27,4 +27,7 @@ interface AccountDao {
     @Query("SELECT accountName FROM account_table WHERE idAccount = :id LIMIT 1")
     fun getAccountNameById(id: Int): LiveData<String>
 
+    @Query("SELECT c.currencyName FROM account_table a JOIN currency_table c ON a.idCurrency = c.idCurrency WHERE a.idAccount = :accountId")
+    suspend fun getCurrencyNameByAccountId(accountId:Int):String?
+
 }

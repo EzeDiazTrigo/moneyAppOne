@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -105,16 +106,29 @@ class MainActivity : AppCompatActivity() {
 
     private fun initUI() {
         initNavigation()
-
-
+        val red = ContextCompat.getColor(this, R.color.red)
+        val white = ContextCompat.getColor(this, R.color.white)
+        val blue = ContextCompat.getColor(this, R.color.sky)
         totalViewModel.getTotalNonARS().observe(this) { sum ->
+            val totalFormatted = sum?.let { String.format("%.2f", kotlin.math.abs(it)) } ?: "0.00"
+            binding.tvDollar.text = if (sum != null && sum < 0) "-$$totalFormatted" else "$$totalFormatted"
+            binding.tvDollar.setTextColor(if (sum != null && sum < 0) red else blue)
+        }
+
+        totalViewModel.getTotalOnlyARS().observe(this) { sum ->
+            val pesosFormatted = sum?.let { String.format("%.2f", kotlin.math.abs(it)) } ?: "0.00"
+            binding.tvPesos.text = if (sum != null && sum < 0) "-$$pesosFormatted" else "$$pesosFormatted"
+            binding.tvPesos.setTextColor(if (sum != null && sum < 0) red else white)
+        }
+
+        /*totalViewModel.getTotalNonARS().observe(this) { sum ->
             val totalFormatted = sum?.let { String.format("%.2f", it) } ?: "0.00"
             binding.tvDollar.text = "$$totalFormatted"}
 
         totalViewModel.getTotalOnlyARS().observe(this) { sum ->
             val pesos = sum?.let { String.format("%.2f", it) } ?: "0.00"
             binding.tvPesos.text = "$$pesos"
-        }
+        }*/
 
         totalViewModel.insertCurrency(
             CurrencyEntity(

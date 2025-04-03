@@ -59,8 +59,8 @@ class TotalDetailActivity : AppCompatActivity() {
             onBackPressed()
         }
         totalViewModel.getAccountNameById(idAccount).observe(this, Observer { accountName ->
-            val title = getString(R.string.account)
-            binding.tvTitleTotalDetail.text = "$title: $accountName"
+            binding.tvTitleTotalDetail.text = "$accountName"
         })
+
     }
 }

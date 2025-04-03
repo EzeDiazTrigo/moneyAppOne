@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">MoneyAppOne</string>
 
-    <string name="debt">Deudas</string>
-    <string name="bill">Gastos</string>
+    <string name="debt">Proximamente...</string>
+    <string name="bill">Movimientos</string>
     <string name="total">Totales</string>
-    <string name="service">Servicios</string>
+    <string name="service">Proximamente...</string>
 
     <string name="select_currency">Seleccione su moneda</string>
     <string name="select_account">Seleccione su cuenta</string>
@@ -21,5 +21,10 @@
     <string name="description">Descripción</string>
 
     <string name="accoutn_not_found">Cuenta no encontrada</string>
+    <string name="ask_remove">¿Seguro que desea eliminar este movimiento?</string>
+    <string name="warning">¡Cuidado!</string>
+    <string name="delete">Eliminar</string>
+    <string name="cancel">Cancelar</string>
+
 
 </resources>

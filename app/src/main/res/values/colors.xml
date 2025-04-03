@@ -11,7 +11,8 @@
     <color name="orange">#ee9361</color>
     <color name="black_alpha">#98000000</color>
 
-    <color name="red">#FF0000</color>
-    <color name="sky">#00BCD4</color>
+    <color name="red">#B33737</color>
+    <color name="sky">#3C87C5</color>
+    <color name="green">#45AD4A</color>
     <color name="colorHint">#A2A2A2</color>
 </resources>

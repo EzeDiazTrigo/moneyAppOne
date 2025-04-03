@@ -1,9 +1,12 @@
 package com.souckan.moneyappone.ui.fragments.Adapters
 
+import android.app.AlertDialog
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.souckan.moneyappone.R
 import com.souckan.moneyappone.data.database.entity.BillEntity
@@ -30,11 +33,15 @@ class BillAdapter(private val bills: MutableList<BillWithDetails>, private val o
         val dateLabel = holder.itemView.context.getString(R.string.date)
         val inputFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
         val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-
-        if (bill.amount >= 0) {
-            holder.binding.tvAmount.text = "+ ${bill.amount}  ${bill.currencyName}"
-        } else {
+        val context = holder.itemView.context
+        val red = ContextCompat.getColor(context, R.color.red)
+        val green = ContextCompat.getColor(context, R.color.green)
+        if (bill.amount < 0) {
+            holder.binding.tvAmount.setTextColor(red)
             holder.binding.tvAmount.text = "- ${bill.amount * (-1)}  ${bill.currencyName}"
+        } else {
+            holder.binding.tvAmount.setTextColor(green)
+            holder.binding.tvAmount.text = "+ ${bill.amount}  ${bill.currencyName}"
         }
 
         holder.binding.tvAccount.text = "$accountLabel: ${bill.accountName}"
@@ -49,7 +56,16 @@ class BillAdapter(private val bills: MutableList<BillWithDetails>, private val o
 
         holder.binding.tvDate.text = "$dateLabel: ${formattedDate}"
         holder.binding.imRemove.setOnClickListener {
-            onDeleteClick(bill.idBill)
+                AlertDialog.Builder(context)
+                    .setTitle(holder.itemView.context.getString(R.string.warning))
+                    .setMessage(holder.itemView.context.getString(R.string.ask_remove))
+                    .setPositiveButton(holder.itemView.context.getString(R.string.delete)) { _, _ ->
+                        onDeleteClick(bill.idBill)
+                    }
+                    .setNegativeButton(holder.itemView.context.getString(R.string.cancel)) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
         }
     }
 
