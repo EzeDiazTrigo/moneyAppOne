@@ -3,13 +3,18 @@ package com.souckan.moneyappone.ui.fragments
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.EditText
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -57,17 +62,17 @@ class billFragment : Fragment() {
 
     private fun showBillDialog() {
         val dialog = Dialog(requireContext())
-        dialog.setContentView(R.layout.dialog_add_bill)
-
         val bindingDialog = DialogAddBillBinding.inflate(layoutInflater)
         dialog.setContentView(bindingDialog.root)
 
         val window = dialog.window
         window?.setLayout(
             (resources.displayMetrics.widthPixels * 0.9).toInt(),  // 90% del ancho
-            (resources.displayMetrics.heightPixels * 0.5).toInt()  // 80% del alto
+            (resources.displayMetrics.heightPixels * 0.5).toInt()  // 50% del alto
         )
+
         var formattedDate: String? = null
+
         bindingDialog.edDate.setOnClickListener {
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
@@ -79,25 +84,20 @@ class billFragment : Fragment() {
                 { _, selectedYear, selectedMonth, selectedDay ->
                     val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
                     bindingDialog.edDate.setText(selectedDate)
-                    formattedDate =
-                        String.format("%04d%02d%02d", selectedYear, selectedMonth + 1, selectedDay)
-                    Log.d("DatePicker", "Fecha seleccionada en formato yyyymmdd: $formattedDate")
+                    formattedDate = String.format("%04d%02d%02d", selectedYear, selectedMonth + 1, selectedDay)
                 },
                 year, month, day
-
             )
             datePickerDialog.show()
         }
-        //Desplegable Account
+
+        // Desplegable Account
         val accounts = totalViewModel.getAllAccountsNames()
         bindingDialog.acAccount.setOnClickListener {
             bindingDialog.acAccount.showDropDown()
         }
         accounts.observe(viewLifecycleOwner, Observer { optionsNames ->
-            Log.d("AutoComplete", "Opciones recibidas: $optionsNames") // Verificar datos
-
             val uniqueNames = optionsNames.distinct() // Filtra nombres repetidos
-
             if (uniqueNames.isNotEmpty()) {
                 val adapter = ArrayAdapter(
                     requireContext(),
@@ -108,12 +108,9 @@ class billFragment : Fragment() {
             }
         })
 
-
-        //Desplegable Currency
+        // Desplegable Currency
         val currency = totalViewModel.getAllCurrenciesNames()
         currency.observe(viewLifecycleOwner, Observer { optionsNames ->
-            Log.d("AutoComplete", "Opciones recibidas: $optionsNames") // Verificar datos
-
             if (optionsNames.isNotEmpty()) {
                 val adapter = ArrayAdapter(
                     requireContext(),
@@ -132,14 +129,43 @@ class billFragment : Fragment() {
                     }
                 }
 
-
-                // Mostrar la lista al hacer clic
                 bindingDialog.acCurrency.setOnClickListener {
                     bindingDialog.acCurrency.showDropDown()
                 }
             }
         })
 
+        // Habilitar el botón solo si los campos obligatorios están completos
+        val goldOff = ContextCompat.getColor(requireContext(), R.color.gold)
+        val goldOn = ContextCompat.getColor(requireContext(), R.color.secondary)
+        bindingDialog.btnAddBill.isEnabled = false
+        bindingDialog.btnAddBill.setBackgroundColor(goldOff)
+
+        val requiredFields = listOf(
+            bindingDialog.acAccount,
+            bindingDialog.acCurrency,
+            bindingDialog.edAmount,
+            bindingDialog.edDate
+        )
+
+        fun validateFields() {
+            val isValid = requiredFields.all { it.text.isNotEmpty() }
+            if(isValid){
+                bindingDialog.btnAddBill.setBackgroundColor(goldOn)
+            }
+            bindingDialog.btnAddBill.isEnabled = isValid
+        }
+
+        requiredFields.forEach { field ->
+            when (field) {
+                is EditText -> field.addTextChangedListener(object : TextWatcher {
+                    override fun afterTextChanged(s: Editable?) = validateFields()
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                })
+                is AutoCompleteTextView -> field.setOnItemClickListener { _, _, _, _ -> validateFields() }
+            }
+        }
 
         bindingDialog.btnAddBill.setOnClickListener {
             val currencyCode = bindingDialog.acCurrency.text.toString()
@@ -148,6 +174,7 @@ class billFragment : Fragment() {
             val amount: Float = amountText.toFloatOrNull() ?: 0f
             val billDate = formattedDate.toString()
             val description = bindingDialog.edDescription.text.toString()
+
             totalViewModel.insertBill(
                 currencyCode = currencyCode,
                 accountName = accountName,
@@ -155,7 +182,8 @@ class billFragment : Fragment() {
                 billDate = billDate,
                 description = description
             )
-            dialog.hide()
+
+            dialog.dismiss()
         }
 
         dialog.show()

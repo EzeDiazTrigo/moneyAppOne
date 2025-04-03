@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MoneyAppOne</string>
+    <string name="app_name">ControlCash</string>
 
     <string name="debt">Proximamente...</string>
     <string name="bill">Movimientos</string>
@@ -18,6 +18,10 @@
     <string name="account">Cuenta</string>
     <string name="amount">Monto</string>
     <string name="date">Fecha</string>
+    <string name="dialog_currency">Moneda*</string>
+    <string name="dialog_account">Cuenta*</string>
+    <string name="dialog_amount">Monto*</string>
+    <string name="dialog_date">Fecha*</string>
     <string name="description">Descripción</string>
 
     <string name="accoutn_not_found">Cuenta no encontrada</string>

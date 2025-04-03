@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/account"
+        android:text="@string/dialog_account"
         android:textColor="@color/white" />
 
     <AutoCompleteTextView
@@ -27,7 +27,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/currency"
+        android:text="@string/dialog_currency"
         android:textColor="@color/white" />
 
     <AutoCompleteTextView
@@ -42,7 +42,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/amount"
+        android:text="@string/dialog_amount"
         android:textColor="@color/white" />
 
     <EditText
@@ -59,7 +59,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/date"
+        android:text="@string/dialog_date"
         android:textColor="@color/white" />
 
     <EditText
