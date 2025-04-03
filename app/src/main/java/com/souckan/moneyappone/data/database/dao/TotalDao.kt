@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import com.souckan.moneyappone.data.database.entity.TotalEntity
 import androidx.room.Query
+import com.souckan.moneyappone.domain.model.TotalWithDetails
 
 @Dao
 interface TotalDao {
@@ -31,4 +32,29 @@ interface TotalDao {
     INNER JOIN currency_table c ON t.idCurrency = c.idCurrency
 """)
     fun getTotalSumInDollars(): LiveData<Double>
+
+    @Query("""
+    SELECT t.idAccount, a.accountName, t.totalAmount, c.currencyName 
+    FROM total_table t
+    INNER JOIN account_table a ON t.idAccount = a.idAccount
+    INNER JOIN currency_table c ON a.idCurrency = c.idCurrency ORDER BY a.accountName ASC
+""")
+    fun getAllTotalsWithDetails(): LiveData<List<TotalWithDetails>>
+
+    @Query("""
+    SELECT SUM(t.totalAmount) 
+    FROM total_table t 
+    INNER JOIN currency_table c ON t.idCurrency = c.idCurrency 
+    WHERE c.currencyName != :excludedCurrency
+""")
+    fun getTotalNonARS(excludedCurrency: String = "ARS"): LiveData<Float?>
+
+    @Query("""
+    SELECT SUM(t.totalAmount) 
+    FROM total_table t 
+    INNER JOIN currency_table c ON t.idCurrency = c.idCurrency 
+    WHERE c.currencyName = :currency
+""")
+    fun getTotalOnlyARS(currency: String = "ARS"): LiveData<Float?>
+
 }

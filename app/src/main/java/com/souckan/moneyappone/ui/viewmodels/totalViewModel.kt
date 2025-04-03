@@ -1,6 +1,8 @@
 package com.souckan.moneyappone.ui.viewmodels
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
@@ -9,6 +11,7 @@ import com.souckan.moneyappone.data.database.entity.CurrencyEntity
 import com.souckan.moneyappone.data.database.entity.TotalEntity
 import com.souckan.moneyappone.data.repository.TotalRepository
 import com.souckan.moneyappone.domain.model.BillWithDetails
+import com.souckan.moneyappone.domain.model.TotalWithDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -66,9 +69,7 @@ class TotalViewModel @Inject constructor(
         return amount / dollarPrice
     }
 
-    suspend fun getDollarPrice(): Float {
-        return repository.getDollarPrice()
-    }
+
 
     fun getAllAccounts() = liveData(Dispatchers.IO) {
         emit(repository.getAllAccounts())
@@ -90,9 +91,10 @@ class TotalViewModel @Inject constructor(
         return repository.getBillsByAccount(idAccount)
     }
 
-    fun getAccountNameById(id: Int) = liveData(Dispatchers.IO) {
-        emit(repository.getAccountNameById(id))
+    fun getAccountNameById(idAccount: Int): LiveData<String> {
+        return repository.getAccountNameById(idAccount)
     }
+
 
     val totalSumInDollars: LiveData<Double> = repository.totalSumInDollars
 
@@ -102,7 +104,21 @@ class TotalViewModel @Inject constructor(
         }
     }
 
+    fun getTotalNonARS(): LiveData<Float?> {
+        return repository.getTotalNonARS()
+    }
+
+    fun getTotalOnlyARS(): LiveData<Float?> {
+        return repository.getTotalOnlyARS()
+    }
+
     val allBillsWithDetails: LiveData<List<BillWithDetails>> = repository.getAllBillsWithDetails()
+
+    val totalsWithDetails: LiveData<List<TotalWithDetails>> = repository.allTotalsWithDetails
+
+    suspend fun getDollarPrice(): Float {
+        return repository.getDollarPrice()
+    }
 
 
 }

@@ -32,9 +32,9 @@ class BillAdapter(private val bills: MutableList<BillWithDetails>, private val o
         val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
         if (bill.amount >= 0) {
-            holder.binding.tvAmount.text = "+ ${bill.amount} ${bill.currencyName}"
+            holder.binding.tvAmount.text = "+ ${bill.amount}  ${bill.currencyName}"
         } else {
-            holder.binding.tvAmount.text = "- ${bill.amount * (-1)} ${bill.currencyName}"
+            holder.binding.tvAmount.text = "- ${bill.amount * (-1)}  ${bill.currencyName}"
         }
 
         holder.binding.tvAccount.text = "$accountLabel: ${bill.accountName}"

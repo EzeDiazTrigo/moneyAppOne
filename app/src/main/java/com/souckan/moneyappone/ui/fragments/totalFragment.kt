@@ -37,7 +37,7 @@ class totalFragment : Fragment() {
         binding.rvTotal.adapter = totalAdapter
 
         // Observar los datos del ViewModel
-        totalViewModel.getAllTotals().observe(viewLifecycleOwner) { totals ->
+        totalViewModel.totalsWithDetails.observe(viewLifecycleOwner) { totals ->
             totalAdapter.updateTotal(totals.toMutableList())
         }
 

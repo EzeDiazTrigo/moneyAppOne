@@ -12,6 +12,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.MediatorLiveData
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -100,32 +101,21 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+
     private fun initUI() {
         initNavigation()
 
 
-        totalViewModel.totalSumInDollars.observe(this) { sum ->
+        totalViewModel.getTotalNonARS().observe(this) { sum ->
             val totalFormatted = sum?.let { String.format("%.2f", it) } ?: "0.00"
-            binding.tvDollar.text = "$totalFormatted"
-            val totalDouble = totalFormatted.toFloat()
-            CoroutineScope(Dispatchers.IO).launch {
-                pesos = totalDouble * totalViewModel.getDollarPrice()
-                runOnUiThread{
-                    binding.tvPesos.text = "$" + String.format("%.2f", pesos)
-                }
+            binding.tvDollar.text = "$$totalFormatted"}
 
-            }
+        totalViewModel.getTotalOnlyARS().observe(this) { sum ->
+            val pesos = sum?.let { String.format("%.2f", it) } ?: "0.00"
+            binding.tvPesos.text = "$$pesos"
         }
 
-
-        /*
-            dolares = totalViewModel.pesosToDollar(pesos)
-            Log.d("DOLAR", dolares.toString())
-
-            runOnUiThread {
-                binding.tvDollar.text = "$" + String.format("%.2f", dolares)
-            }
-        }*/
         totalViewModel.insertCurrency(
             CurrencyEntity(
                 idCurrency = 1,

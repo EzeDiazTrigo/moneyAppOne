@@ -12,11 +12,12 @@ import com.souckan.moneyappone.R
 import com.souckan.moneyappone.data.database.entity.BillEntity
 import com.souckan.moneyappone.data.database.entity.TotalEntity
 import com.souckan.moneyappone.databinding.ItemCardTotalBinding
+import com.souckan.moneyappone.domain.model.TotalWithDetails
 import com.souckan.moneyappone.ui.detail.TotalDetailActivity
 
 class TotalAdapter(
-    private val totals: MutableList<TotalEntity>,
-    private val onItemClick: (String) -> Unit  // Callback con el ID de la cuenta
+    private val totals: MutableList<TotalWithDetails>,
+    private val onItemClick: (Int) -> Unit  // Callback con el ID de la cuenta
 ) : RecyclerView.Adapter<TotalAdapter.TotalViewHolder>() {
 
     class TotalViewHolder(val binding: ItemCardTotalBinding) : RecyclerView.ViewHolder(binding.root)
@@ -29,7 +30,7 @@ class TotalAdapter(
 
     override fun onBindViewHolder(holder: TotalViewHolder, position: Int) {
         val total = totals[position]
-        holder.binding.tvAmount.text = "${total.idAccount}: ${total.totalAmount}"
+        holder.binding.tvAmount.text = "${total.accountName}: $${total.totalAmount}"
 
         // Manejar el clic para abrir la nueva pantalla con las `bills`
         holder.itemView.setOnClickListener { view ->
@@ -44,7 +45,7 @@ class TotalAdapter(
 
     override fun getItemCount(): Int = totals.size
 
-    fun updateTotal(newTotals: MutableList<TotalEntity>) {
+    fun updateTotal(newTotals: MutableList<TotalWithDetails>) {
         totals.clear()
         totals.addAll(newTotals)
         notifyDataSetChanged()

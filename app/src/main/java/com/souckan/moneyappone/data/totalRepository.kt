@@ -12,6 +12,7 @@ import com.souckan.moneyappone.data.database.entity.TotalEntity
 import com.souckan.moneyappone.data.network.DollarAPIService
 import com.souckan.moneyappone.data.network.NetworkModule.provideRetrofit
 import com.souckan.moneyappone.domain.model.BillWithDetails
+import com.souckan.moneyappone.domain.model.TotalWithDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -61,6 +62,8 @@ class TotalRepository @Inject constructor(
     fun getAllBillsWithDetails(): LiveData<List<BillWithDetails>> {
         return billDao.getAllBillsWithDetails()
     }
+
+    val allTotalsWithDetails: LiveData<List<TotalWithDetails>> = totalDao.getAllTotalsWithDetails()
 
 
     suspend fun deleteAllTotals() {
@@ -199,9 +202,17 @@ class TotalRepository @Inject constructor(
         return currencyDao.getAllCurrenciesNames()
     }
 
-    suspend fun getAccountNameById(id: Int): AccountEntity {
-        return accountDao.getAccountNameById(id)
+
+    fun getAccountNameById(idAccount: Int): LiveData<String> {
+        return accountDao.getAccountNameById(idAccount)
     }
 
+    fun getTotalOnlyARS(): LiveData<Float?> {
+        return totalDao.getTotalOnlyARS("ARS")
+    }
+
+    fun getTotalNonARS(): LiveData<Float?> {
+        return totalDao.getTotalNonARS("ARS")
+    }
 
 }
