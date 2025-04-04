@@ -1,39 +1,23 @@
 package com.souckan.moneyappone
 
-import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.preferencesDataStore
-import androidx.lifecycle.MediatorLiveData
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import androidx.room.Room
-import com.souckan.moneyappone.data.SettingsData
-import com.souckan.moneyappone.data.database.TotalDatabase
-import com.souckan.moneyappone.data.database.entity.BillEntity
+import com.souckan.moneyappone.data.SharedPreferences.Pin.PinManager
 import com.souckan.moneyappone.data.database.entity.CurrencyEntity
-import com.souckan.moneyappone.data.database.entity.TotalEntity
-import com.souckan.moneyappone.data.network.DollarAPIService
-import com.souckan.moneyappone.data.network.NetworkModule.provideRetrofit
 import com.souckan.moneyappone.databinding.ActivityMainBinding
-import com.souckan.moneyappone.domain.model.Total
+import com.souckan.moneyappone.ui.settings.PinActivity
 import com.souckan.moneyappone.ui.viewmodels.TotalViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 
@@ -48,22 +32,32 @@ class MainActivity : AppCompatActivity() {
     var dolares: Float = 0.0F
     var dolarHoy: Float = 0.0F
     var isFirstTime: Boolean = true
+    private lateinit var pinManager: PinManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+
+         // Clase que maneja el PIN
+        pinManager = PinManager(this)
+
+        Log.d("ESTA AUTENTICADO?", pinManager.isUserAuthenticated().toString())
+        if (!pinManager.isUserAuthenticated()) {
+            Log.d("ENTRO OTRA VEZZ", pinManager.isUserAuthenticated().toString())
+            startActivity(Intent(this, PinActivity::class.java))
+            finish()
+        } else{
+            Log.d("NO ENTRE NOOOOO", pinManager.isUserAuthenticated().toString())
+            setContentView(binding.root)
+        }
 
         initUI()
-
-
         totalViewModel.getAllAccountsNames().observe(this) { totals ->
             totals.forEach { total ->
                 Log.d("CUENTAS NOMBRE", "Nombre cuenta -> Cuenta: ${total}")
             }
         }
-
         totalViewModel.getAllCurrencies().observe(this) { totals ->
             totals.forEach { total ->
                 Log.d(
@@ -72,7 +66,6 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
-
         totalViewModel.getAllBills().observe(this) { totals ->
             totals.forEach { total ->
                 Log.d(
@@ -81,7 +74,6 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
-
         totalViewModel.getAllAccounts().observe(this) { totals ->
             totals.forEach { total ->
                 Log.d(
@@ -90,7 +82,6 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
-
         totalViewModel.getAllTotals().observe(this) { totals ->
             totals.forEach { total ->
                 Log.d(
@@ -183,34 +174,23 @@ class MainActivity : AppCompatActivity() {
         binding.buttonNavView.setupWithNavController(navController)
     }
 
-
-    /*private fun setCurrenciesOnce(){
-        CoroutineScope(Dispatchers.IO).launch {
-            getSettings().collect { settingsModel ->
-                if (settingsModel != null) {
-                    if(settingsModel.isFirstTime){
-                        var usdPrice = totalViewModel.getDollarPrice()
-                        runOnUiThread {
-                            val usd = CurrencyEntity(currencyName = "USD", dollarPrice = 1.0F)
-                            val usdt = CurrencyEntity(currencyName = "USDT", dollarPrice = 1.0F)
-                            val usdc = CurrencyEntity(currencyName = "USDC", dollarPrice = 1.0F)
-                            val dai = CurrencyEntity(currencyName = "DAI", dollarPrice = 1.0F)
-                            val ars = CurrencyEntity(currencyName = "ARS", dollarPrice = usdPrice)
-                            totalViewModel.insertCurrency(usd)
-                            totalViewModel.insertCurrency(usdt)
-                            totalViewModel.insertCurrency(usdc)
-                            totalViewModel.insertCurrency(dai)
-                            totalViewModel.insertCurrency(ars)
-
-                        }
-                        isFirstTime = false
-                        saveTheme(FIRST_KEY, isFirstTime)
-                    }
-                }
-
-            }
+    // Volver a pedir PIN cada vez que la app se reabre
+    override fun onResume() {
+        super.onResume()
+        val pinManager = PinManager(this)
+        if (!pinManager.isUserAuthenticated()) {
+            startActivity(Intent(this, PinActivity::class.java))
+            finish()
         }
-    }*/
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("AUTH", "Se borra la autenticación porque la app se fue al fondo")
+        pinManager.setUserAuthenticated(false)
+        pinManager.clearAuthentication()
+    }
+
 }
 
 
