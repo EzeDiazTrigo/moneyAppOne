@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.souckan.moneyappone.R
 import com.souckan.moneyappone.data.database.entity.BillEntity
 import androidx.lifecycle.Observer
+import com.souckan.moneyappone.data.SharedPreferences.Pin.PinManager
 import com.souckan.moneyappone.databinding.ActivityMainBinding
 import com.souckan.moneyappone.databinding.ActivityTotalDetailBinding
 import com.souckan.moneyappone.ui.fragments.Adapters.BillAdapter
@@ -29,13 +30,14 @@ class TotalDetailActivity : AppCompatActivity() {
     private val totalViewModel: TotalViewModel by viewModels()
     private lateinit var totalDetailAdapter: TotalDetailAdapter
     private var idAccount: Int = -1
+    private lateinit var pinManager: PinManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityTotalDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        pinManager = PinManager(this)
         idAccount = intent.getIntExtra("idAccount", -1)
         Log.d("ACCOUNT ID", idAccount.toString())
 
@@ -56,6 +58,7 @@ class TotalDetailActivity : AppCompatActivity() {
 
     private fun initUI() {
         binding.ivBackToTotal.setOnClickListener {
+            pinManager.setUserAuthenticated(true)
             onBackPressed()
         }
         totalViewModel.getAccountNameById(idAccount).observe(this, Observer { accountName ->

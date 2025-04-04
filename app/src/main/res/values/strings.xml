@@ -29,6 +29,7 @@
     <string name="warning">¡Cuidado!</string>
     <string name="delete">Eliminar</string>
     <string name="cancel">Cancelar</string>
+    <string name="to_continue">Continuar</string>
 
 
 </resources>
