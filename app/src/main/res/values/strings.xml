@@ -16,6 +16,9 @@
     <string name="add_bill">Añadir gasto</string>
     <string name="add_account">Añadir cuenta</string>
 
+    <string name="edit_account_name">Editar nombre</string>
+    <string name="delete_account_and_bills">Eliminar Cuenta</string>
+
     <string name="currency">Moneda</string>
     <string name="account">Cuenta</string>
     <string name="amount">Monto</string>
@@ -26,12 +29,31 @@
     <string name="dialog_date">Fecha*</string>
     <string name="description">Descripción</string>
 
+    <!--IMPORT & EXPORT-->
+    <string name="import_description">Carga la base de datos desde un archivo externo</string>
+    <string name="export_description">Guarda una copia de la base de datos</string>
+
+    <string name="import_title">Importar</string>
+    <string name="export_title">Exportar</string>
+
     <string name="accoutn_not_found">Cuenta no encontrada</string>
     <string name="ask_remove">¿Seguro que desea eliminar este movimiento?</string>
     <string name="warning">¡Cuidado!</string>
     <string name="delete">Eliminar</string>
     <string name="cancel">Cancelar</string>
-    <string name="to_continue">Continuar</string>
+    <string name="to_continue">Continuar ></string>
+    <string name="save">Guardar</string>
+    <string name="delete_account_title">Eliminar Cuenta</string>
+    <string name="dark_mode">Modo oscuro</string>
+    <string name="dark_mode_description">Activa el modo oscuro para un cambio visual</string>
+
+
+    <!--PIN-->
+    <string name="pin_saved">PIN guardado correctamente</string>
+    <string name="pin_error">Error al guardar el PIN</string>
+    <string name="pin_more_four">El PIN debe tener 4 o más dígitos</string>
+    <string name="pin_wrong">PIN incorrecto</string>
+
 
     <!--MONEDAS-->
     <string name="ars">ARS</string>

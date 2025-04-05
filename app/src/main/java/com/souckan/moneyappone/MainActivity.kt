@@ -1,8 +1,10 @@
 package com.souckan.moneyappone
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -23,7 +25,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -32,24 +33,30 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var pinManager: PinManager
     private var totalUSD: Float = 0f
+    private var totalBTC: Float = 0f
     private var totalARS: Float = 0f
     private var totalSumUSD: Float = 0f
     private var totalSumARS: Float = 0f
     private var dollarRate = 1f
+    private var bitcoinRate = 1f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        hideSystemUI()
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         pinManager = PinManager(this)
 
         Log.d("ESTA AUTENTICADO?", pinManager.isUserAuthenticated().toString())
+
+
+
         if (!pinManager.isUserAuthenticated()) {
             Log.d("ENTRO OTRA VEZZ", pinManager.isUserAuthenticated().toString())
             startActivity(Intent(this, PinActivity::class.java))
             finish()
-        } else{
+        } else {
             Log.d("NO ENTRE NOOOOO", pinManager.isUserAuthenticated().toString())
             setContentView(binding.root)
         }
@@ -98,9 +105,26 @@ class MainActivity : AppCompatActivity() {
     private fun initUI() {
         initNavigation()
 
+        //Color de barra de navegación y de status
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryDark)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val decorView = window.decorView
+            decorView.systemUiVisibility = 0  // vuelve al default, íconos claros
+        }
+        window.statusBarColor = ContextCompat.getColor(this, R.color.primaryDark)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val decorView = window.decorView
+            decorView.systemUiVisibility = 0 // Íconos claros
+        }
+
         lifecycleScope.launch {
             dollarRate = totalViewModel.getDollarPrice()
+            bitcoinRate = totalViewModel.getBitcoinPrice()
             actualizarTotales() // Llama una vez en caso de que ya haya datos en los LiveData
+        }
+        totalViewModel.getTotalOnlyBTC().observe(this) { btc ->
+            totalBTC = btc ?: 0f
+            actualizarTotales()
         }
 
         totalViewModel.getTotalNonARS().observe(this) { usd ->
@@ -144,13 +168,22 @@ class MainActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             val currentDollarPrice = totalViewModel.getDollarPrice()
-            Log.d("DOLARHOY", currentDollarPrice.toString())
+            Log.d("DOLAR HOY", currentDollarPrice.toString())
+            val currentBitcoinPrice = totalViewModel.getBitcoinPrice()
+            Log.d("BITCOIN HOY", currentBitcoinPrice.toString())
             runOnUiThread {
                 totalViewModel.insertCurrency(
                     CurrencyEntity(
                         idCurrency = 5,
                         currencyName = "ARS",
                         dollarPrice = currentDollarPrice
+                    )
+                )
+                totalViewModel.insertCurrency(
+                    CurrencyEntity(
+                        idCurrency = 6,
+                        currencyName = "BTC",
+                        dollarPrice = currentBitcoinPrice
                     )
                 )
             }
@@ -163,8 +196,8 @@ class MainActivity : AppCompatActivity() {
         if (dollarRate == 0f) return
         val arsName = getString(R.string.ars)
         val usdName = getString(R.string.usd)
-        val totalEnPesos = totalARS + (totalUSD * dollarRate)
-        val totalEnDolares = totalUSD + (totalARS / dollarRate)
+        val totalEnPesos = totalARS + (totalUSD * dollarRate) + (totalBTC * bitcoinRate * dollarRate)
+        val totalEnDolares = totalUSD + (totalARS / dollarRate) + (totalBTC * bitcoinRate)
         val red = ContextCompat.getColor(this, R.color.red)
         val white = ContextCompat.getColor(this, R.color.white)
         val grey = ContextCompat.getColor(this, R.color.grey)
@@ -184,7 +217,7 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         navController = navHost.navController
         binding.buttonNavView.setupWithNavController(navController)
-        binding.imgSettings.setOnClickListener{
+        binding.imgSettings.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
     }
@@ -203,6 +236,14 @@ class MainActivity : AppCompatActivity() {
         Log.d("AUTH", "Se borra la autenticación porque la app se fue al fondo")
         pinManager.setUserAuthenticated(false)
         pinManager.clearAuthentication()
+    }
+
+    private fun hideSystemUI() {
+        window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                )
     }
 
 }

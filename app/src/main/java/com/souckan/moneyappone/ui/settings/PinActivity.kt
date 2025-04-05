@@ -1,11 +1,14 @@
 package com.souckan.moneyappone.ui.settings
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.souckan.moneyappone.MainActivity
@@ -21,12 +24,24 @@ class PinActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        hideSystemUI()
         enableEdgeToEdge()
         binding = ActivityPinBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         pinManager = PinManager(this)
         Log.d("PIN DEBUG", "PinActivity iniciado - PIN Guardado: ${pinManager.getPin()}")
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.primary)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val decorView = window.decorView
+            decorView.systemUiVisibility = 0  // vuelve al default, íconos claros
+        }
+        window.statusBarColor = ContextCompat.getColor(this, R.color.primary)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val decorView = window.decorView
+            decorView.systemUiVisibility = 0 // Íconos claros
+        }
+
 
         if (pinManager.getPin() == null) {
             binding.tvTitlePin.text = "Configurar PIN"
@@ -49,13 +64,13 @@ class PinActivity : AppCompatActivity() {
                 Log.d("PIN DEBUG", "Nuevo PIN: $newPin - Guardado: $savedPin")
 
                 if (savedPin == newPin) {
-                    Toast.makeText(this, "PIN guardado correctamente", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(com.souckan.moneyappone.R.string.pin_saved), Toast.LENGTH_SHORT).show()
                     navigateToMain()
                 } else {
-                    Toast.makeText(this, "Error al guardar el PIN", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(com.souckan.moneyappone.R.string.pin_error), Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(this, "El PIN debe tener 4 o más dígitos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(com.souckan.moneyappone.R.string.pin_more_four), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -70,7 +85,7 @@ class PinActivity : AppCompatActivity() {
                 pinManager.setUserAuthenticated(true)
                 navigateToMain()
             } else {
-                Toast.makeText(this, "PIN incorrecto", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(com.souckan.moneyappone.R.string.pin_wrong), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -78,5 +93,13 @@ class PinActivity : AppCompatActivity() {
     private fun navigateToMain() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
+    }
+
+    private fun hideSystemUI() {
+        window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                )
     }
 }

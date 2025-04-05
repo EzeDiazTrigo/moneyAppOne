@@ -1,6 +1,7 @@
 package com.souckan.moneyappone.data.repository
 
 import android.accounts.Account
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.souckan.moneyappone.data.database.dao.AccountDao
 import com.souckan.moneyappone.data.database.dao.BillDao
@@ -10,8 +11,12 @@ import com.souckan.moneyappone.data.database.entity.AccountEntity
 import com.souckan.moneyappone.data.database.entity.BillEntity
 import com.souckan.moneyappone.data.database.entity.CurrencyEntity
 import com.souckan.moneyappone.data.database.entity.TotalEntity
+import com.souckan.moneyappone.data.network.CryptoAPIService
 import com.souckan.moneyappone.data.network.DollarAPIService
+import com.souckan.moneyappone.data.network.NetworkModule.provideCryptoRetrofit
 import com.souckan.moneyappone.data.network.NetworkModule.provideRetrofit
+import com.souckan.moneyappone.data.network.NetworkModule_ProvideCryptoAPIFactory.provideCryptoAPI
+import com.souckan.moneyappone.data.network.response.CryptoPriceResponse
 import com.souckan.moneyappone.domain.model.BillWithDetails
 import com.souckan.moneyappone.domain.model.TotalWithDetails
 import kotlinx.coroutines.Dispatchers
@@ -114,6 +119,28 @@ class TotalRepository @Inject constructor(
             } else {
                 1.0F
             }
+        }
+    }
+
+    suspend fun getBitcoinPrice():Float {
+        try{
+            return withContext(Dispatchers.IO) {
+                val call = provideCryptoRetrofit().create(CryptoAPIService::class.java).getBitcoinPrice()
+                val response = call.body()
+                Log.d("BTC 1", response.toString())
+                Log.d("BTC 2", call.isSuccessful.toString())
+                Log.d("API_URL", call.raw().request.url.toString())
+                if (call.isSuccessful && response != null) {
+                    response.bitcoin.usd.toFloat()
+                } else {
+                    Log.e("BITCOIN_API", "Error HTTP: ${call.code()}")
+                    Log.e("BITCOIN_API", "Error body: ${call.errorBody()?.string()}")
+                    0.0F
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return 0.0f
         }
     }
 
@@ -244,6 +271,10 @@ class TotalRepository @Inject constructor(
 
     fun getTotalOnlyARS(): LiveData<Float?> {
         return totalDao.getTotalOnlyARS("ARS")
+    }
+
+    fun getTotalOnlyBTC(): LiveData<Float?> {
+        return totalDao.getTotalOnlyBTC("BTC")
     }
 
     fun getTotalNonARS(): LiveData<Float?> {

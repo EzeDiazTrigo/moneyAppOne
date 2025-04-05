@@ -48,9 +48,9 @@ interface TotalDao {
     SELECT SUM(t.totalAmount) 
     FROM total_table t 
     INNER JOIN currency_table c ON t.idCurrency = c.idCurrency 
-    WHERE c.currencyName != :excludedCurrency
+    WHERE c.currencyName != :excludedARS AND c.currencyName != :excludedBTC
 """)
-    fun getTotalNonARS(excludedCurrency: String = "ARS"): LiveData<Float?>
+    fun getTotalNonARS(excludedARS: String = "ARS", excludedBTC: String = "BTC"): LiveData<Float?>
 
     @Query("""
     SELECT SUM(t.totalAmount) 
@@ -59,5 +59,13 @@ interface TotalDao {
     WHERE c.currencyName = :currency
 """)
     fun getTotalOnlyARS(currency: String = "ARS"): LiveData<Float?>
+
+    @Query("""
+    SELECT SUM(t.totalAmount) 
+    FROM total_table t 
+    INNER JOIN currency_table c ON t.idCurrency = c.idCurrency 
+    WHERE c.currencyName = :currency
+""")
+    fun getTotalOnlyBTC(currency: String = "BTC"): LiveData<Float?>
 
 }

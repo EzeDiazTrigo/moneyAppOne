@@ -20,17 +20,6 @@ class debtFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnExport.setOnClickListener {
-            startExportDatabase()
-        }
-
-
-        binding.btnImport.setOnClickListener {
-            startImportDatabase()
-
-        }
-
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -38,30 +27,6 @@ class debtFragment : Fragment() {
         DatabaseUtils.handleImportResult(requestCode, resultCode, data, requireActivity())
     }
 
-    private val exportLauncher = registerForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) { uri ->
-        if (uri != null) {
-            DatabaseUtils.exportDatabase(requireContext(), uri)
-        } else {
-            Toast.makeText(requireContext(), "Exportación cancelada", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private val importLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        if (uri != null) {
-            DatabaseUtils.importDatabase(requireContext(), uri)
-        } else {
-            Toast.makeText(requireContext(), "Importación cancelada", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun startImportDatabase() {
-        importLauncher.launch(arrayOf("*/*"))
-    }
-
-
-    fun startExportDatabase() {
-        exportLauncher.launch("backup_total_database.db")
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

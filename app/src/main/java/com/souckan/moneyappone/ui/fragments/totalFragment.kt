@@ -54,12 +54,12 @@ class totalFragment : Fragment() {
             },
             onDeleteClick = { total ->
                 AlertDialog.Builder(requireContext())
-                    .setTitle("Eliminar cuenta")
+                    .setTitle(getString(com.souckan.moneyappone.R.string.delete_account_title))
                     .setMessage("¿Seguro que querés eliminar '${total.accountName}' y todos sus gastos?")
-                    .setPositiveButton("Eliminar") { _, _ ->
+                    .setPositiveButton(getString(com.souckan.moneyappone.R.string.delete)) { _, _ ->
                         totalViewModel.deleteAccountWithBills(total.idAccount)
                     }
-                    .setNegativeButton("Cancelar", null)
+                    .setNegativeButton(getString(com.souckan.moneyappone.R.string.cancel), null)
                     .show()
             }
         )
@@ -159,20 +159,20 @@ class totalFragment : Fragment() {
 
     private fun showEditDialog(total: TotalWithDetails) {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Editar nombre de cuenta")
+        builder.setTitle(getString(com.souckan.moneyappone.R.string.edit_account_name))
 
         val input = EditText(requireContext())
         input.setText(total.accountName)
         builder.setView(input)
 
-        builder.setPositiveButton("Guardar") { _, _ ->
+        builder.setPositiveButton(getString(com.souckan.moneyappone.R.string.save)) { _, _ ->
             val newName = input.text.toString().trim()
             if (newName.isNotEmpty()) {
                 totalViewModel.updateAccountName(total.idAccount, newName)
             }
         }
 
-        builder.setNegativeButton("Cancelar", null)
+        builder.setNegativeButton(getString(com.souckan.moneyappone.R.string.cancel), null)
         builder.show()
     }
 

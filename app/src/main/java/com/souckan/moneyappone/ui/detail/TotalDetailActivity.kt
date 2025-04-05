@@ -1,11 +1,14 @@
 package com.souckan.moneyappone.ui.detail
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
@@ -34,6 +37,7 @@ class TotalDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        hideSystemUI()
         enableEdgeToEdge()
         binding = ActivityTotalDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -57,6 +61,19 @@ class TotalDetailActivity : AppCompatActivity() {
     }
 
     private fun initUI() {
+
+        //Color de barra de navegación y de status
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.primary)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val decorView = window.decorView
+            decorView.systemUiVisibility = 0  // vuelve al default, íconos claros
+        }
+        window.statusBarColor = ContextCompat.getColor(this, R.color.primary)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val decorView = window.decorView
+            decorView.systemUiVisibility = 0 // Íconos claros
+        }
+
         binding.ivBackToTotal.setOnClickListener {
             pinManager.setUserAuthenticated(true)
             onBackPressed()
@@ -65,5 +82,13 @@ class TotalDetailActivity : AppCompatActivity() {
             binding.tvTitleTotalDetail.text = "$accountName"
         })
 
+    }
+
+    private fun hideSystemUI() {
+        window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                )
     }
 }
