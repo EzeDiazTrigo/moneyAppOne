@@ -74,6 +74,15 @@ class TotalRepository @Inject constructor(
         return billDao.getBillsByAccount(idAccount)
     }
 
+    suspend fun deleteAccountWithBills(accountId: Int) {
+        accountDao.deleteAccountWithBills(accountId)
+    }
+
+    suspend fun updateAccountName(accountId: Int, newName: String) {
+        accountDao.updateAccountName(accountId, newName)
+    }
+
+
     //Llamar APIs para obtenerlo
     suspend fun getDollarPrice(): Float {
         return withContext(Dispatchers.IO) {

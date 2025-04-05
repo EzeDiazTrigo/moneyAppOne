@@ -15,6 +15,7 @@ import com.souckan.moneyappone.data.SharedPreferences.Pin.PinManager
 import com.souckan.moneyappone.data.database.entity.CurrencyEntity
 import com.souckan.moneyappone.databinding.ActivityMainBinding
 import com.souckan.moneyappone.ui.settings.PinActivity
+import com.souckan.moneyappone.ui.settings.SettingsActivity
 import com.souckan.moneyappone.ui.viewmodels.TotalViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -41,7 +42,6 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
 
-         // Clase que maneja el PIN
         pinManager = PinManager(this)
 
         Log.d("ESTA AUTENTICADO?", pinManager.isUserAuthenticated().toString())
@@ -95,8 +95,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
-
     private fun initUI() {
         initNavigation()
 
@@ -114,21 +112,6 @@ class MainActivity : AppCompatActivity() {
             totalARS = ars ?: 0f
             actualizarTotales()
         }
-
-/*
-        totalViewModel.getTotalNonARS().observe(this) { sum ->
-            totalUSD = sum ?: 0f
-            val dollarFormatted = sum?.let { String.format("%.2f", kotlin.math.abs(it)) } ?: "0.00"
-            binding.tvDollar.text = if (sum != null && sum < 0) "-$$dollarFormatted  $usdName" else "$$dollarFormatted  $usdName"
-            binding.tvDollar.setTextColor(if (sum != null && sum < 0) red else grey)
-        }
-        totalViewModel.getTotalOnlyARS().observe(this) { sum ->
-            totalARS = sum ?: 0f
-            val pesosFormatted = sum?.let { String.format("%.2f", kotlin.math.abs(it)) } ?: "0.00"
-            binding.tvPesos.text = if (sum != null && sum < 0) "-$$pesosFormatted  $arsName" else "$$pesosFormatted  $arsName"
-            binding.tvPesos.setTextColor(if (sum != null && sum < 0) red else white)
-        }
-*/
 
         totalViewModel.insertCurrency(
             CurrencyEntity(
@@ -196,15 +179,16 @@ class MainActivity : AppCompatActivity() {
         binding.tvDollar.setTextColor(if (totalEnDolares != null && totalEnDolares < 0) red else grey)
     }
 
-
     private fun initNavigation() {
         val navHost =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         navController = navHost.navController
         binding.buttonNavView.setupWithNavController(navController)
+        binding.imgSettings.setOnClickListener{
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
     }
 
-    // Volver a pedir PIN cada vez que la app se reabre
     override fun onResume() {
         super.onResume()
         val pinManager = PinManager(this)

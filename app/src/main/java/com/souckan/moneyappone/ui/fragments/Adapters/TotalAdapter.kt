@@ -9,6 +9,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -24,7 +25,9 @@ import com.souckan.moneyappone.ui.detail.TotalDetailActivity
 
 class TotalAdapter(
     private val totals: MutableList<TotalWithDetails>,
-    private val onItemClick: (Int) -> Unit  // Callback con el ID de la cuenta
+    private val onItemClick: (Int) -> Unit,  // Callback con el ID de la cuenta
+    private val onEditClick: (TotalWithDetails) -> Unit,
+    private val onDeleteClick: (TotalWithDetails) -> Unit
 ) : RecyclerView.Adapter<TotalAdapter.TotalViewHolder>() {
 
     class TotalViewHolder(val binding: ItemCardTotalBinding) : RecyclerView.ViewHolder(binding.root)
@@ -55,17 +58,37 @@ class TotalAdapter(
                 holder.binding.tvAmount.text = "$${total.totalAmount}"
             }
         }
+
         holder.binding.tvAccount.text = "${total.accountName}"
         holder.binding.tvCurrency.text = "(${total.currencyName})"
 
-
-        // Manejar el clic para abrir la nueva pantalla con las `bills`
         holder.itemView.setOnClickListener { view ->
             val navController = Navigation.findNavController(view)
             navController.navigate(
                 R.id.action_totalFragment_to_totalDetailActivity2,
                 bundleOf("idAccount" to total.idAccount)
             )
+        }
+
+        holder.itemView.setOnLongClickListener { view ->
+            val popup = PopupMenu(view.context, view)
+            popup.menuInflater.inflate(R.menu.menu_total_item, popup.menu)
+
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.action_edit -> {
+                        onEditClick(total)
+                        true
+                    }
+                    R.id.action_delete -> {
+                        onDeleteClick(total)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popup.show()
+            true
         }
 
     }
@@ -80,30 +103,5 @@ class TotalAdapter(
 }
 
 
-/*class TotalAdapter(private val totals: MutableList<TotalEntity>, private val onItemSelected:(BillEntity)->Unit) :
-    RecyclerView.Adapter<TotalAdapter.TotalViewHolder>() {
-
-    class TotalViewHolder(val binding: ItemCardTotalBinding) : RecyclerView.ViewHolder(binding.root)
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TotalViewHolder {
-        val binding = ItemCardTotalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return TotalViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: TotalViewHolder, position: Int) {
-        val total = totals[position]
-        holder.binding.tvAmount.text = "${total.idAccount}: ${total.totalAmount}"
-    }
-
-    override fun getItemCount(): Int = totals.size
-
-
-    fun updateTotal(newTotals: MutableList<TotalEntity>) {
-        totals.clear()
-        totals.addAll(newTotals)
-        notifyDataSetChanged()  // Notificar que los datos han cambiado
-    }
-
-}*/
 
 

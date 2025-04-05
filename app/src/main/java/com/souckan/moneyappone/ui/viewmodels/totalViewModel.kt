@@ -69,7 +69,15 @@ class TotalViewModel @Inject constructor(
         return amount / dollarPrice
     }
 
+    fun deleteAccountWithBills(accountId: Int) {
+        viewModelScope.launch {
+            repository.deleteAccountWithBills(accountId)
+        }
+    }
 
+    fun updateAccountName(accountId: Int, newName: String) = viewModelScope.launch(Dispatchers.IO) {
+        repository.updateAccountName(accountId, newName)
+    }
 
     fun getAllAccounts() = liveData(Dispatchers.IO) {
         emit(repository.getAllAccounts())

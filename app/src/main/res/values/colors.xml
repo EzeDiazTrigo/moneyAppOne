@@ -15,4 +15,5 @@
     <color name="sky">#3C87C5</color>
     <color name="green">#45AD4A</color>
     <color name="colorHint">#A2A2A2</color>
+    <color name="selected_item_bg">#A2A2A2</color>
 </resources>

@@ -10,6 +10,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.souckan.moneyappone.R
+import com.souckan.moneyappone.data.SharedPreferences.Pin.PinManager
 import com.souckan.moneyappone.databinding.ActivitySettingsBinding
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
@@ -17,6 +18,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
+    private lateinit var pinManager: PinManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +26,17 @@ class SettingsActivity : AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        pinManager = PinManager(this)
 
+        initUI()
 
+    }
+
+    private fun initUI() {
+        binding.ivBackToTotal.setOnClickListener {
+            onBackPressed()
+            pinManager.setUserAuthenticated(true)
+        }
+        binding.tvTitleSettings.text = getString(R.string.settings)
     }
 }
