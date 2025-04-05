@@ -1,5 +1,6 @@
 package com.souckan.moneyappone.data.repository
 
+import android.accounts.Account
 import androidx.lifecycle.LiveData
 import com.souckan.moneyappone.data.database.dao.AccountDao
 import com.souckan.moneyappone.data.database.dao.BillDao
@@ -68,6 +69,26 @@ class TotalRepository @Inject constructor(
 
     suspend fun deleteAllTotals() {
         totalDao.deleteAllTotals()
+    }
+
+    suspend fun addAccount(accountName: String, currencyName: String) {
+        val currency = currencyDao.getCurrencyByCode(currencyName)
+        val newAccount = currency?.let {
+            AccountEntity(
+                accountName = accountName,
+                idCurrency = it.idCurrency
+            )
+        }
+        if (newAccount != null) {
+            accountDao.insertAll(newAccount)
+        }
+        val currentAccount = currency?.let { accountDao.getAccountByName(accountName, it.idCurrency) }
+        val newTotal =  currency?.let {
+            currentAccount?.let { it1 -> TotalEntity(idCurrency = it.idCurrency, totalAmount = 0f, idAccount = it1.idAccount) }
+        }
+        if (newTotal != null) {
+            totalDao.insertTotal(newTotal)
+        }
     }
 
     fun getBillsByAccount(idAccount: Int): LiveData<List<BillWithDetails>> {
@@ -143,6 +164,7 @@ class TotalRepository @Inject constructor(
             currency = currencyDao.getCurrencyByCode(currencyCode) // Obtener el nuevo ID
         }
 
+
         // Insertar el nuevo Bill
         val bill = account?.let {
             currency?.idCurrency?.let { it1 ->
@@ -197,6 +219,10 @@ class TotalRepository @Inject constructor(
 
     suspend fun getAllAccounts(): List<AccountEntity> {
         return accountDao.getAllAccount()
+    }
+
+    suspend fun getCurrencyByCode(code: String): CurrencyEntity? {
+        return currencyDao.getCurrencyByCode(code)
     }
 
     suspend fun getAllCurrencies(): List<CurrencyEntity> {

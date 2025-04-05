@@ -14,6 +14,7 @@
     <string name="insert_description">Ingrese una descripción</string>
     <string name="new_bill">Nuevo gasto</string>
     <string name="add_bill">Añadir gasto</string>
+    <string name="add_account">Añadir cuenta</string>
 
     <string name="currency">Moneda</string>
     <string name="account">Cuenta</string>

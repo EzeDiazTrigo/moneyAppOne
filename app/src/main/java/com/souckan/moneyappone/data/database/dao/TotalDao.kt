@@ -18,6 +18,9 @@ interface TotalDao {
     suspend fun insertAll(total: List<TotalEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTotal(total: TotalEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateTotal(total: TotalEntity)
 
     @Query("DELETE FROM total_table")

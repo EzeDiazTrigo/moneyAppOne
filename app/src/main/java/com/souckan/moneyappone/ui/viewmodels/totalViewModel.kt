@@ -36,6 +36,10 @@ class TotalViewModel @Inject constructor(
         }
     }
 
+    fun getCurrencyByCode(code: String) = liveData(Dispatchers.IO) {
+        emit(repository.getCurrencyByCode(code))
+    }
+
     fun insertCurrency(currency: CurrencyEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertCurrency(currency)
@@ -89,6 +93,10 @@ class TotalViewModel @Inject constructor(
 
     fun getAllCurrenciesNames() = liveData(Dispatchers.IO) {
         emit(repository.getAllCurrenciesNames())
+    }
+
+    fun addAccount(accountName: String, currencyName: String) = viewModelScope.launch(Dispatchers.IO) {
+        repository.addAccount(accountName, currencyName)
     }
 
     fun getAllCurrencies() = liveData(Dispatchers.IO) {

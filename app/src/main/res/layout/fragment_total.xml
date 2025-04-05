@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/primary"
     tools:context=".ui.fragments.totalFragment">
 
@@ -14,5 +15,16 @@
         android:clipToPadding="false"
         android:padding="16dp"
         android:scrollbars="vertical" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addAccountButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="30dp"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="@color/secondary"
+        app:fabSize="normal"
+        app:tint="@color/primaryDark" />
 
 </FrameLayout>
