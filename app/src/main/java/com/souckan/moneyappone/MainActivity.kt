@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -21,18 +22,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val totalViewModel: TotalViewModel by viewModels()
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    val FIRST_KEY: String = "FIRST"
-    var pesos: Float = 1468000.0F
-    var dolares: Float = 0.0F
-    var dolarHoy: Float = 0.0F
-    var isFirstTime: Boolean = true
     private lateinit var pinManager: PinManager
+    private var totalUSD: Float = 0f
+    private var totalARS: Float = 0f
+    private var totalSumUSD: Float = 0f
+    private var totalSumARS: Float = 0f
+    private var dollarRate = 1f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,29 +99,36 @@ class MainActivity : AppCompatActivity() {
 
     private fun initUI() {
         initNavigation()
-        val red = ContextCompat.getColor(this, R.color.red)
-        val white = ContextCompat.getColor(this, R.color.white)
-        val blue = ContextCompat.getColor(this, R.color.sky)
-        totalViewModel.getTotalNonARS().observe(this) { sum ->
-            val totalFormatted = sum?.let { String.format("%.2f", kotlin.math.abs(it)) } ?: "0.00"
-            binding.tvDollar.text = if (sum != null && sum < 0) "-$$totalFormatted" else "$$totalFormatted"
-            binding.tvDollar.setTextColor(if (sum != null && sum < 0) red else blue)
+
+        lifecycleScope.launch {
+            dollarRate = totalViewModel.getDollarPrice()
+            actualizarTotales() // Llama una vez en caso de que ya haya datos en los LiveData
         }
 
+        totalViewModel.getTotalNonARS().observe(this) { usd ->
+            totalUSD = usd ?: 0f
+            actualizarTotales()
+        }
+
+        totalViewModel.getTotalOnlyARS().observe(this) { ars ->
+            totalARS = ars ?: 0f
+            actualizarTotales()
+        }
+
+/*
+        totalViewModel.getTotalNonARS().observe(this) { sum ->
+            totalUSD = sum ?: 0f
+            val dollarFormatted = sum?.let { String.format("%.2f", kotlin.math.abs(it)) } ?: "0.00"
+            binding.tvDollar.text = if (sum != null && sum < 0) "-$$dollarFormatted  $usdName" else "$$dollarFormatted  $usdName"
+            binding.tvDollar.setTextColor(if (sum != null && sum < 0) red else grey)
+        }
         totalViewModel.getTotalOnlyARS().observe(this) { sum ->
+            totalARS = sum ?: 0f
             val pesosFormatted = sum?.let { String.format("%.2f", kotlin.math.abs(it)) } ?: "0.00"
-            binding.tvPesos.text = if (sum != null && sum < 0) "-$$pesosFormatted" else "$$pesosFormatted"
+            binding.tvPesos.text = if (sum != null && sum < 0) "-$$pesosFormatted  $arsName" else "$$pesosFormatted  $arsName"
             binding.tvPesos.setTextColor(if (sum != null && sum < 0) red else white)
         }
-
-        /*totalViewModel.getTotalNonARS().observe(this) { sum ->
-            val totalFormatted = sum?.let { String.format("%.2f", it) } ?: "0.00"
-            binding.tvDollar.text = "$$totalFormatted"}
-
-        totalViewModel.getTotalOnlyARS().observe(this) { sum ->
-            val pesos = sum?.let { String.format("%.2f", it) } ?: "0.00"
-            binding.tvPesos.text = "$$pesos"
-        }*/
+*/
 
         totalViewModel.insertCurrency(
             CurrencyEntity(
@@ -166,6 +175,27 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+    private fun actualizarTotales() {
+        if (dollarRate == 0f) return
+        val arsName = getString(R.string.ars)
+        val usdName = getString(R.string.usd)
+        val totalEnPesos = totalARS + (totalUSD * dollarRate)
+        val totalEnDolares = totalUSD + (totalARS / dollarRate)
+        val red = ContextCompat.getColor(this, R.color.red)
+        val white = ContextCompat.getColor(this, R.color.white)
+        val grey = ContextCompat.getColor(this, R.color.grey)
+
+        val totalPesosFormatted = String.format("%.2f", kotlin.math.abs(totalEnPesos))
+        val totalDolaresFormatted = String.format("%.2f", kotlin.math.abs(totalEnDolares))
+
+        binding.tvPesos.text = "$totalPesosFormatted  $arsName"
+        binding.tvPesos.setTextColor(if (totalEnPesos != null && totalEnPesos < 0) red else white)
+
+        binding.tvDollar.text = "$totalDolaresFormatted  $usdName"
+        binding.tvDollar.setTextColor(if (totalEnDolares != null && totalEnDolares < 0) red else grey)
+    }
+
 
     private fun initNavigation() {
         val navHost =

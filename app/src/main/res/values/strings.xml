@@ -31,5 +31,11 @@
     <string name="cancel">Cancelar</string>
     <string name="to_continue">Continuar</string>
 
+    <!--MONEDAS-->
+    <string name="ars">ARS</string>
+    <string name="usd">USD</string>
+    <string name="usdt">USDT</string>
+    <string name="usdc">USDC</string>
+    <string name="dai">DAI</string>
 
 </resources>

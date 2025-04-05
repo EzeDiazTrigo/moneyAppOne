@@ -14,4 +14,20 @@
         android:layout_marginHorizontal="40dp"
         app:tint="@color/primaryLight"/>
 
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:text="IMPORT"
+        android:id="@+id/btnImport"
+        android:layout_gravity="end"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/secondary"/>
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:text="EXPORT"
+        android:id="@+id/btnExport"/>
+
+
 </FrameLayout>

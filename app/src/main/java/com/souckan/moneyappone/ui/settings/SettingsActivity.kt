@@ -16,12 +16,6 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 
 class SettingsActivity : AppCompatActivity() {
 
-    companion object{
-        const val KEY_DARKMODE = "key_darkmode"
-        const val KEY_TOTAL_ARS = "key_total_ars"
-        const val KEY_TOTAL_USD = "key_total_usd"
-    }
-
     private lateinit var binding: ActivitySettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
