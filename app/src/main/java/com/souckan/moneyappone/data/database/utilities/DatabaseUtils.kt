@@ -45,24 +45,18 @@ object DatabaseUtils {
 
     // Manejar el resultado del selector de archivos en la Activity
     fun importDatabase(context: Context, uri: Uri) {
-        Log.d("APRETE EL BOTON", "Intentaremos importar")
         try {
-            val dbFile = context.getDatabasePath("total_database")
-
-            context.contentResolver.openInputStream(uri)?.use { input ->
-                FileOutputStream(dbFile).use { output ->
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val outputFile = File(context.getDatabasePath("total_database").absolutePath)
+            inputStream?.use { input ->
+                FileOutputStream(outputFile).use { output ->
                     input.copyTo(output)
                 }
             }
-
-            Toast.makeText(context, "Base de datos importada correctamente", Toast.LENGTH_LONG).show()
-            Log.d("SIIIIIIIIIIIIIIII", "Base de datos importada correctamente")
-            if (context is Activity) {
-                context.finishAffinity()
-            }
+            Toast.makeText(context, "Importación exitosa", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
-            Log.e("DatabaseUtils", "Error al importar la base de datos", e)
-            Toast.makeText(context, "Error al importar la base de datos", Toast.LENGTH_SHORT).show()
+            e.printStackTrace()
+            Toast.makeText(context, "Error al importar base de datos", Toast.LENGTH_LONG).show()
         }
     }
 

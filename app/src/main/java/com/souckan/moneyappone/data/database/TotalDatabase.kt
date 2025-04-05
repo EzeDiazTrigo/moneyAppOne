@@ -30,5 +30,29 @@ abstract class TotalDatabase : RoomDatabase() {
     abstract fun getCurrencyDao(): CurrencyDao
     abstract fun getBillDao(): BillDao
     abstract fun getAccountDao(): AccountDao
+
+    companion object {
+        @Volatile
+        private var INSTANCE: TotalDatabase? = null
+
+        fun getDatabase(context: Context): TotalDatabase {
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    TotalDatabase::class.java,
+                    "total_database.db"
+                ).build()
+                INSTANCE = instance
+                instance
+            }
+        }
+
+        fun closeInstance() {
+            INSTANCE?.close()
+            INSTANCE = null
+        }
+    }
 }
+
+
 

@@ -16,8 +16,10 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.souckan.moneyappone.R
 import com.souckan.moneyappone.data.SharedPreferences.Pin.PinManager
+import com.souckan.moneyappone.data.database.TotalDatabase
 import com.souckan.moneyappone.data.database.utilities.DatabaseUtils
 import com.souckan.moneyappone.databinding.ActivitySettingsBinding
+import com.souckan.moneyappone.di.RoomModule
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -65,6 +67,8 @@ class SettingsActivity : AppCompatActivity() {
 
 
         binding.btnImport.setOnClickListener {
+
+
             startImportDatabase()
 
         }
@@ -88,6 +92,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun startImportDatabase() {
+        RoomModule.closeDatabase()
         importLauncher.launch(arrayOf("*/*"))
     }
 

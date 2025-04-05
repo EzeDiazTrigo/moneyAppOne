@@ -17,11 +17,28 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object RoomModule {
     private val TOTAL_DATABASE_NAME = "total_database"
-
-    @Singleton
+    
+    @Volatile
+    private var INSTANCE: TotalDatabase? = null
+    
     @Provides
-    fun provideRoom(@ApplicationContext context: Context) =
-        Room.databaseBuilder(context, TotalDatabase::class.java, TOTAL_DATABASE_NAME).build()
+    @Singleton
+    fun provideDatabase(@ApplicationContext context: Context): TotalDatabase {
+        return RoomModule.INSTANCE ?: synchronized(this) {
+            Room.databaseBuilder(
+                context.applicationContext,
+                TotalDatabase::class.java,
+                "total_database"
+            ).build().also {
+                RoomModule.INSTANCE = it
+            }
+        }
+    }
+
+    fun closeDatabase() {
+        RoomModule.INSTANCE?.close()
+        RoomModule.INSTANCE = null
+    }
 
     @Singleton
     @Provides
