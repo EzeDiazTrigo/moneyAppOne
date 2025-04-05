@@ -45,17 +45,29 @@ class TotalAdapter(
         val green = ContextCompat.getColor(context, R.color.green)
         val zero = ContextCompat.getColor(context, R.color.white)
         when{
-            (total.totalAmount < 0) -> {
+            (total.totalAmount < 0 && total.currencyName != "BTC") -> {
                 holder.binding.tvAmount.setTextColor(red)
-                holder.binding.tvAmount.text = "-$${total.totalAmount}"
+                holder.binding.tvAmount.text = "-$${String.format("%.2f", kotlin.math.abs(total.totalAmount))}"
             }
-            (total.totalAmount > 0) -> {
+            (total.totalAmount > 0  && total.currencyName != "BTC" ) -> {
                 holder.binding.tvAmount.setTextColor(green)
-                holder.binding.tvAmount.text = "$${total.totalAmount}"
+                holder.binding.tvAmount.text = "$${String.format("%.2f", kotlin.math.abs(total.totalAmount))}"
             }
-            (total.totalAmount.toFloat() == 0.0F) -> {
+            (total.totalAmount.toFloat() == 0.0F && total.currencyName != "BTC") -> {
                 holder.binding.tvAmount.setTextColor(zero)
-                holder.binding.tvAmount.text = "$${total.totalAmount}"
+                holder.binding.tvAmount.text = "$${String.format("%.2f", kotlin.math.abs(total.totalAmount))}"
+            }
+            (total.totalAmount < 0 && total.currencyName == "BTC") -> {
+                holder.binding.tvAmount.setTextColor(red)
+                holder.binding.tvAmount.text = "-$${String.format("%.8f", kotlin.math.abs(total.totalAmount))}"
+            }
+            (total.totalAmount > 0  && total.currencyName == "BTC" ) -> {
+                holder.binding.tvAmount.setTextColor(green)
+                holder.binding.tvAmount.text = "$${String.format("%.8f", kotlin.math.abs(total.totalAmount))}"
+            }
+            (total.totalAmount.toFloat() == 0.0F && total.currencyName == "BTC") -> {
+                holder.binding.tvAmount.setTextColor(zero)
+                holder.binding.tvAmount.text = "$${String.format("%.8f", kotlin.math.abs(total.totalAmount))}"
             }
         }
 

@@ -2,6 +2,7 @@ package com.souckan.moneyappone.ui.fragments.Adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.souckan.moneyappone.R
 import com.souckan.moneyappone.domain.model.BillWithDetails
@@ -30,11 +31,27 @@ class TotalDetailAdapter(private val bills: MutableList<BillWithDetails>) :
         val currencyLabel = holder.itemView.context.getString(R.string.currency)
         val inputFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
         val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val context = holder.itemView.context
+        val red = ContextCompat.getColor(context, R.color.red)
+        val green = ContextCompat.getColor(context, R.color.green)
+        if(bill.currencyName == "BTC"){
+            if (bill.amount < 0) {
+                holder.binding.tvAmount.setTextColor(red)
+                holder.binding.tvAmount.text = "- ${String.format("%.8f", kotlin.math.abs(bill.amount * (-1)))}  ${bill.currencyName}"
 
-        if (bill.amount >= 0) {
-            holder.binding.tvAmount.text = "+ ${bill.amount}  ${bill.currencyName}"
-        } else {
-            holder.binding.tvAmount.text = "- ${bill.amount * (-1)}  ${bill.currencyName}"
+            } else {
+                holder.binding.tvAmount.setTextColor(green)
+                holder.binding.tvAmount.text = "+ ${String.format("%.8f", kotlin.math.abs(bill.amount))}  ${bill.currencyName}"
+            }
+        }else{
+            if (bill.amount < 0) {
+                holder.binding.tvAmount.setTextColor(red)
+                holder.binding.tvAmount.text = "- ${String.format("%.2f", kotlin.math.abs(bill.amount * (-1)))}  ${bill.currencyName}"
+
+            } else {
+                holder.binding.tvAmount.setTextColor(green)
+                holder.binding.tvAmount.text = "+ ${String.format("%.2f", kotlin.math.abs(bill.amount))}  ${bill.currencyName}"
+            }
         }
         holder.binding.tvDescription.text = "$descriptionLabel: ${bill.description}"
 

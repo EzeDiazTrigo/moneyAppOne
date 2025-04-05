@@ -36,13 +36,26 @@ class BillAdapter(private val bills: MutableList<BillWithDetails>, private val o
         val context = holder.itemView.context
         val red = ContextCompat.getColor(context, R.color.red)
         val green = ContextCompat.getColor(context, R.color.green)
-        if (bill.amount < 0) {
-            holder.binding.tvAmount.setTextColor(red)
-            holder.binding.tvAmount.text = "- ${bill.amount * (-1)}  ${bill.currencyName}"
-        } else {
-            holder.binding.tvAmount.setTextColor(green)
-            holder.binding.tvAmount.text = "+ ${bill.amount}  ${bill.currencyName}"
+        if(bill.currencyName == "BTC"){
+            if (bill.amount < 0) {
+                holder.binding.tvAmount.setTextColor(red)
+                holder.binding.tvAmount.text = "- ${String.format("%.8f", kotlin.math.abs(bill.amount * (-1)))}  ${bill.currencyName}"
+
+            } else {
+                holder.binding.tvAmount.setTextColor(green)
+                holder.binding.tvAmount.text = "+ ${String.format("%.8f", kotlin.math.abs(bill.amount))}  ${bill.currencyName}"
+            }
+        }else{
+            if (bill.amount < 0) {
+                holder.binding.tvAmount.setTextColor(red)
+                holder.binding.tvAmount.text = "- ${String.format("%.2f", kotlin.math.abs(bill.amount * (-1)))}  ${bill.currencyName}"
+
+            } else {
+                holder.binding.tvAmount.setTextColor(green)
+                holder.binding.tvAmount.text = "+ ${String.format("%.2f", kotlin.math.abs(bill.amount))}  ${bill.currencyName}"
+            }
         }
+
 
         holder.binding.tvAccount.text = "$accountLabel: ${bill.accountName}"
         holder.binding.tvDescription.text = "$descriptionLabel: ${bill.description}"
