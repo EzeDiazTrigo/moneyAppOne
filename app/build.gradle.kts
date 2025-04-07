@@ -44,6 +44,7 @@ android {
 }
 
 dependencies {
+
     val navVersion = "2.8.8"
     //NavComponent
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
@@ -63,6 +64,8 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     //Share Preferences
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
+    //Seguridad
+    implementation ("androidx.security:security-crypto:1.1.0-alpha06")
     //Default
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

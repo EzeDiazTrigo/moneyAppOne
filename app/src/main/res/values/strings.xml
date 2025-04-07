@@ -53,7 +53,13 @@
     <string name="pin_error">Error al guardar el PIN</string>
     <string name="pin_more_four">El PIN debe tener 4 o más dígitos</string>
     <string name="pin_wrong">PIN incorrecto</string>
-
+    <string name="change_pin">Cambiar PIN</string>
+    <string name="change_pin_title">Ingrese su nuevo PIN</string>
+    <string name="confirm_pin">Ingrese su PIN actual</string>
+    <string name="change_pin_description">Cambia el PIN actual por uno nuevo</string>
+    <string name="configure_pin">Cree un PIN</string>
+    <string name="write_pin">Ingrese su PIN</string>
+    <string name="forgot_pin">¿Olvidaste tu PIN?</string>
 
     <!--MONEDAS-->
     <string name="ars">ARS</string>

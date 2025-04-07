@@ -68,7 +68,11 @@ class SettingsActivity : AppCompatActivity() {
             val decorView = window.decorView
             decorView.systemUiVisibility = 0 // Íconos claros
         }
-
+        binding.btnChangePin.setOnClickListener {
+            val intent = Intent(this, PinActivity::class.java)
+            intent.putExtra(PinActivity.ACTION_CHANGE_PIN, true)
+            startActivity(intent)
+        }
         binding.ivBackToTotal.setOnClickListener {
             onBackPressed()
             pinManager.setUserAuthenticated(true)
@@ -122,11 +126,6 @@ class SettingsActivity : AppCompatActivity() {
             Toast.makeText(this, "Exportación cancelada", Toast.LENGTH_SHORT).show()
         }
     }
-
-
-
-
-
 
     private val importLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
