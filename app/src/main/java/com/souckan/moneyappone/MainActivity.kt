@@ -220,11 +220,6 @@ class MainActivity : AppCompatActivity() {
         val white = ContextCompat.getColor(this, R.color.white)
         val grey = ContextCompat.getColor(this, R.color.grey)
 
-        Log.d("TOTAL USD", totalUSD.toString())
-        Log.d("TOTAL BTC", totalBTC.toString())
-        Log.d("TOTAL ARS", totalARS.toString())
-        Log.d("TOTAL EUR", totalEUR.toString())
-
         val totalPesosFormatted = String.format("%.2f", kotlin.math.abs(totalEnPesos))
         val totalDolaresFormatted = String.format("%.2f", kotlin.math.abs(totalEnDolares))
 

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -15,13 +16,21 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.lifecycleScope
+import androidx.room.Room
 import com.souckan.moneyappone.MainActivity
 import com.souckan.moneyappone.R
 import com.souckan.moneyappone.data.SharedPreferences.Pin.PinManager
 import com.souckan.moneyappone.data.database.TotalDatabase
 import com.souckan.moneyappone.data.database.utilities.DatabaseUtils
+import com.souckan.moneyappone.data.database.utilities.DatabaseUtils.copyDatabaseFiles
+import com.souckan.moneyappone.data.database.utilities.DatabaseUtils.exportDatabase
 import com.souckan.moneyappone.databinding.ActivitySettingsBinding
 import com.souckan.moneyappone.di.RoomModule
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -29,6 +38,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
     private lateinit var pinManager: PinManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,13 +87,46 @@ class SettingsActivity : AppCompatActivity() {
         binding.tvTitleSettings.text = getString(R.string.settings)
     }
 
+    suspend fun forceCheckpointAndClose(context: Context) {
+        withContext(Dispatchers.IO) {
+            val db = Room.databaseBuilder(
+                context,
+                TotalDatabase::class.java,
+                "total_database"
+            ).build()
+
+            try {
+                db.openHelper.writableDatabase.execSQL("PRAGMA wal_checkpoint(FULL)")
+            } catch (e: Exception) {
+                Log.e("Checkpoint", "Error haciendo checkpoint", e)
+            } finally {
+                db.close()
+            }
+        }
+    }
+
     private val exportLauncher = registerForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) { uri ->
         if (uri != null) {
-            DatabaseUtils.exportDatabase(this, uri)
+            lifecycleScope.launch {
+                forceCheckpointAndClose(applicationContext)
+                delay(500) // Le damos tiempo a que se complete el cierre
+                try {
+                    copyDatabaseFiles(applicationContext, uri)
+                    Toast.makeText(applicationContext, "Base de datos exportada con éxito", Toast.LENGTH_LONG).show()
+                } catch (e: Exception) {
+                    Log.e("ExportDB", "Error exportando la base de datos", e)
+                    Toast.makeText(applicationContext, "Error al exportar la base de datos", Toast.LENGTH_SHORT).show()
+                }
+            }
         } else {
             Toast.makeText(this, "Exportación cancelada", Toast.LENGTH_SHORT).show()
         }
     }
+
+
+
+
+
 
     private val importLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {

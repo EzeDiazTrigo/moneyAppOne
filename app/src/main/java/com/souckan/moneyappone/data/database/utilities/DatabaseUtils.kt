@@ -8,7 +8,15 @@ import android.net.Uri
 import android.os.Environment
 import android.util.Log
 import android.widget.Toast
+import androidx.room.Room
+import com.souckan.moneyappone.data.database.TotalDatabase
+import com.souckan.moneyappone.di.RoomModule
+import com.souckan.moneyappone.di.RoomModule.provideDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.*
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 
 object DatabaseUtils {
 
@@ -16,8 +24,12 @@ object DatabaseUtils {
     private const val BACKUP_FOLDER = "MoneyAppBackups"
 
     // Exportar base de datos
-    fun exportDatabase(context: Context, uri: Uri) {
+    fun exportDatabase(context: Context, uri: Uri, db: TotalDatabase) {
         try {
+            // Forzar volcado del Write-Ahead Log (si se está usando WAL)
+            db.openHelper.writableDatabase.execSQL("PRAGMA wal_checkpoint(FULL)")
+            db.close() // Esto también asegura que se escriba
+
             val dbFile = context.getDatabasePath("total_database")
             context.contentResolver.openOutputStream(uri)?.use { output ->
                 FileInputStream(dbFile).use { input ->
@@ -31,6 +43,7 @@ object DatabaseUtils {
             Toast.makeText(context, "Error al exportar la base de datos", Toast.LENGTH_SHORT).show()
         }
     }
+
 
 
     // Seleccionar archivo de base de datos para importar
@@ -72,4 +85,37 @@ object DatabaseUtils {
             }
         }
     }
+
+
+    fun copyDatabaseFiles(context: Context, uri: Uri) {
+        val dbName = "total_database"
+        val dbPath = context.getDatabasePath(dbName).absolutePath
+        val walPath = "$dbPath-wal"
+        val shmPath = "$dbPath-shm"
+
+        context.contentResolver.openOutputStream(uri)?.use { output ->
+            ZipOutputStream(output).use { zipOut ->
+                listOf(
+                    dbPath to dbName,
+                    walPath to "$dbName-wal",
+                    shmPath to "$dbName-shm"
+                ).forEach { (path, name) ->
+                    val file = File(path)
+                    if (file.exists()) {
+                        FileInputStream(file).use { input ->
+                            zipOut.putNextEntry(ZipEntry(name))
+                            input.copyTo(zipOut)
+                            zipOut.closeEntry()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
+
+
 }
