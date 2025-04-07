@@ -19,25 +19,24 @@ object RoomModule {
     private val TOTAL_DATABASE_NAME = "total_database"
     
     @Volatile
-    private var INSTANCE: TotalDatabase? = null
-    
+    private var databaseInstance: TotalDatabase? = null
+
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): TotalDatabase {
-        return RoomModule.INSTANCE ?: synchronized(this) {
-            Room.databaseBuilder(
-                context.applicationContext,
+        if (databaseInstance == null) {
+            databaseInstance = Room.databaseBuilder(
+                context,
                 TotalDatabase::class.java,
                 "total_database"
-            ).build().also {
-                RoomModule.INSTANCE = it
-            }
+            ).build()
         }
+        return databaseInstance!!
     }
 
     fun closeDatabase() {
-        RoomModule.INSTANCE?.close()
-        RoomModule.INSTANCE = null
+        databaseInstance?.close()
+        databaseInstance = null
     }
 
     @Singleton

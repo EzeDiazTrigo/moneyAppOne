@@ -11,23 +11,22 @@ import com.souckan.moneyappone.data.database.entity.AccountEntity
 import com.souckan.moneyappone.data.database.entity.BillEntity
 import com.souckan.moneyappone.data.database.entity.CurrencyEntity
 import com.souckan.moneyappone.data.database.entity.TotalEntity
-import com.souckan.moneyappone.data.network.CryptoAPIService
-import com.souckan.moneyappone.data.network.DollarAPIService
-import com.souckan.moneyappone.data.network.NetworkModule.provideCryptoRetrofit
+import com.souckan.moneyappone.data.network.BinanceAPIService
 import com.souckan.moneyappone.data.network.NetworkModule.provideRetrofit
-import com.souckan.moneyappone.data.network.NetworkModule_ProvideCryptoAPIFactory.provideCryptoAPI
-import com.souckan.moneyappone.data.network.response.CryptoPriceResponse
 import com.souckan.moneyappone.domain.model.BillWithDetails
 import com.souckan.moneyappone.domain.model.TotalWithDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 class TotalRepository @Inject constructor(
     private val totalDao: TotalDao,
     private val accountDao: AccountDao,
     private val currencyDao: CurrencyDao,
-    private val billDao: BillDao
+    private val billDao: BillDao,
+    private val apiService: BinanceAPIService
 ) {
     val totalSumInDollars: LiveData<Double> = totalDao.getTotalSumInDollars()
 
@@ -108,41 +107,30 @@ class TotalRepository @Inject constructor(
         accountDao.updateAccountName(accountId, newName)
     }
 
-
-    //Llamar APIs para obtenerlo
-    suspend fun getDollarPrice(): Float {
+    suspend fun getCryptoPrice(symbol: String): Float {
         return withContext(Dispatchers.IO) {
-            val call = provideRetrofit().create(DollarAPIService::class.java).getDollarPrice("blue")
-            val response = call.body()
-            if (call.isSuccessful && response != null) {
-                response.venta.toFloat()
-            } else {
-                1.0F
+            try {
+                val response = apiService.getPrice(symbol)
+                response.price.toFloat()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                0f
             }
         }
     }
 
-    suspend fun getBitcoinPrice():Float {
-        try{
-            return withContext(Dispatchers.IO) {
-                val call = provideCryptoRetrofit().create(CryptoAPIService::class.java).getBitcoinPrice()
-                val response = call.body()
-                Log.d("BTC 1", response.toString())
-                Log.d("BTC 2", call.isSuccessful.toString())
-                Log.d("API_URL", call.raw().request.url.toString())
-                if (call.isSuccessful && response != null) {
-                    response.bitcoin.usd.toFloat()
-                } else {
-                    Log.e("BITCOIN_API", "Error HTTP: ${call.code()}")
-                    Log.e("BITCOIN_API", "Error body: ${call.errorBody()?.string()}")
-                    0.0F
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return 0.0f
-        }
+    suspend fun getDollarPrice(): Float {
+        return getCryptoPrice("USDTARS")
     }
+
+    suspend fun getBitcoinPrice(): Float {
+        return getCryptoPrice("BTCUSDT")
+    }
+
+    suspend fun getEuroPrice(): Float {
+        return getCryptoPrice("EURUSDT")
+    }
+
 
 
     suspend fun insertBill(
@@ -176,15 +164,6 @@ class TotalRepository @Inject constructor(
 
         var currentDollarPrice: Float = 1.0F
         if (currency == null) {
-            when (currencyCode) {
-                "USD" -> {
-                    currentDollarPrice = 1.0F
-                }
-
-                "ARG" -> {
-                    currentDollarPrice = getDollarPrice()
-                }
-            }
             val newCurrency =
                 CurrencyEntity(currencyName = currencyCode, dollarPrice = currentDollarPrice)
             currencyDao.insertAll(newCurrency)
@@ -274,7 +253,11 @@ class TotalRepository @Inject constructor(
     }
 
     fun getTotalOnlyBTC(): LiveData<Float?> {
-        return totalDao.getTotalOnlyBTC("BTC")
+        return totalDao.getTotalOnly("BTC")
+    }
+
+    fun getTotalOnlyEUR(): LiveData<Float?> {
+        return totalDao.getTotalOnly("EUR")
     }
 
     fun getTotalNonARS(): LiveData<Float?> {

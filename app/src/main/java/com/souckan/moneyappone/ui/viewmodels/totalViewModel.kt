@@ -128,8 +128,13 @@ class TotalViewModel @Inject constructor(
         return repository.getTotalOnlyARS()
     }
 
+
     fun getTotalOnlyBTC(): LiveData<Float?> {
         return repository.getTotalOnlyBTC()
+    }
+
+    fun getTotalOnlyEUR(): LiveData<Float?> {
+        return repository.getTotalOnlyEUR()
     }
 
     val allBillsWithDetails: LiveData<List<BillWithDetails>> = repository.getAllBillsWithDetails()
@@ -142,6 +147,10 @@ class TotalViewModel @Inject constructor(
 
     suspend fun getBitcoinPrice(): Float {
         return repository.getBitcoinPrice()
+    }
+
+    suspend fun getEuroPrice(): Float {
+        return repository.getEuroPrice()
     }
 
 

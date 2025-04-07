@@ -53,9 +53,11 @@ object DatabaseUtils {
                     input.copyTo(output)
                 }
             }
+            Log.d("ImportDB", "Importación completada: ${outputFile.absolutePath}")
             Toast.makeText(context, "Importación exitosa", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             e.printStackTrace()
+            Log.e("ImportDB", "Error al importar la base de datos", e)
             Toast.makeText(context, "Error al importar base de datos", Toast.LENGTH_LONG).show()
         }
     }

@@ -1,6 +1,7 @@
 package com.souckan.moneyappone.ui.settings
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -14,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.souckan.moneyappone.MainActivity
 import com.souckan.moneyappone.R
 import com.souckan.moneyappone.data.SharedPreferences.Pin.PinManager
 import com.souckan.moneyappone.data.database.TotalDatabase
@@ -86,6 +88,8 @@ class SettingsActivity : AppCompatActivity() {
     private val importLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
             DatabaseUtils.importDatabase(this, uri)
+            RoomModule.closeDatabase()
+            restartApp()
         } else {
             Toast.makeText(this, "Importación cancelada", Toast.LENGTH_SHORT).show()
         }
@@ -94,6 +98,14 @@ class SettingsActivity : AppCompatActivity() {
     private fun startImportDatabase() {
         RoomModule.closeDatabase()
         importLauncher.launch(arrayOf("*/*"))
+    }
+
+    private fun restartApp() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
+        Runtime.getRuntime().exit(0) // opción extra si sigue fallando
     }
 
 

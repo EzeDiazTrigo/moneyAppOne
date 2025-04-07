@@ -35,10 +35,12 @@ class MainActivity : AppCompatActivity() {
     private var totalUSD: Float = 0f
     private var totalBTC: Float = 0f
     private var totalARS: Float = 0f
+    private var totalEUR: Float = 0f
     private var totalSumUSD: Float = 0f
     private var totalSumARS: Float = 0f
     private var dollarRate = 1f
     private var bitcoinRate = 1f
+    private var euroRate = 1f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,6 +122,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             dollarRate = totalViewModel.getDollarPrice()
             bitcoinRate = totalViewModel.getBitcoinPrice()
+            euroRate = totalViewModel.getEuroPrice()
             actualizarTotales() // Llama una vez en caso de que ya haya datos en los LiveData
         }
         totalViewModel.getTotalOnlyBTC().observe(this) { btc ->
@@ -134,6 +137,11 @@ class MainActivity : AppCompatActivity() {
 
         totalViewModel.getTotalOnlyARS().observe(this) { ars ->
             totalARS = ars ?: 0f
+            actualizarTotales()
+        }
+
+        totalViewModel.getTotalOnlyEUR().observe(this) { eur ->
+            totalEUR = eur ?: 0f
             actualizarTotales()
         }
 
@@ -171,6 +179,9 @@ class MainActivity : AppCompatActivity() {
             Log.d("DOLAR HOY", currentDollarPrice.toString())
             val currentBitcoinPrice = totalViewModel.getBitcoinPrice()
             Log.d("BITCOIN HOY", currentBitcoinPrice.toString())
+            val currentEuroPrice = totalViewModel.getEuroPrice()
+            Log.d("EURO HOY", currentEuroPrice.toString())
+            Log.d("EURO HOY 2", euroRate.toString())
             runOnUiThread {
                 totalViewModel.insertCurrency(
                     CurrencyEntity(
@@ -186,6 +197,13 @@ class MainActivity : AppCompatActivity() {
                         dollarPrice = currentBitcoinPrice
                     )
                 )
+                totalViewModel.insertCurrency(
+                    CurrencyEntity(
+                        idCurrency = 7,
+                        currencyName = "EUR",
+                        dollarPrice = currentEuroPrice
+                    )
+                )
             }
         }
 
@@ -196,11 +214,16 @@ class MainActivity : AppCompatActivity() {
         if (dollarRate == 0f) return
         val arsName = getString(R.string.ars)
         val usdName = getString(R.string.usd)
-        val totalEnPesos = totalARS + (totalUSD * dollarRate) + (totalBTC * bitcoinRate * dollarRate)
-        val totalEnDolares = totalUSD + (totalARS / dollarRate) + (totalBTC * bitcoinRate)
+        val totalEnPesos = totalARS + (totalUSD * dollarRate) + (totalBTC * bitcoinRate * dollarRate) + (totalEUR * euroRate * dollarRate)
+        val totalEnDolares = totalUSD + (totalARS / dollarRate) + (totalBTC * bitcoinRate) + (totalEUR * euroRate)
         val red = ContextCompat.getColor(this, R.color.red)
         val white = ContextCompat.getColor(this, R.color.white)
         val grey = ContextCompat.getColor(this, R.color.grey)
+
+        Log.d("TOTAL USD", totalUSD.toString())
+        Log.d("TOTAL BTC", totalBTC.toString())
+        Log.d("TOTAL ARS", totalARS.toString())
+        Log.d("TOTAL EUR", totalEUR.toString())
 
         val totalPesosFormatted = String.format("%.2f", kotlin.math.abs(totalEnPesos))
         val totalDolaresFormatted = String.format("%.2f", kotlin.math.abs(totalEnDolares))

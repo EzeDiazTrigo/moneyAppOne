@@ -18,28 +18,15 @@ object NetworkModule {
     @Named("dollar")
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://dolarapi.com/v1/dolares/")
+            .baseUrl("https://api.binance.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
     @Provides
     @Singleton
-    @Named("crypto")
-    fun provideCryptoRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("https://api.coingecko.com/api/v3/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    fun provideApiService(@Named("dollar") retrofit: Retrofit): BinanceAPIService {
+        return retrofit.create(BinanceAPIService::class.java)
     }
 
-    @Provides
-    fun provideHoroscopeApiService(@Named("dollar") retrofit: Retrofit): DollarAPIService {
-        return retrofit.create(DollarAPIService::class.java)
-    }
-
-    @Provides
-    fun provideCryptoAPI(@Named("crypto") retrofit: Retrofit): CryptoAPIService {
-        return retrofit.create(CryptoAPIService::class.java)
-    }
 }
