@@ -172,6 +172,7 @@ class PinActivity : AppCompatActivity() {
                 val answer = inputAnswer.text.toString()
                 if (question.isNotBlank() && answer.isNotBlank()) {
                     pinManager.saveSecurityQuestion(question, answer)
+                    pinManager.setUserAuthenticated(true)
                     navigateToMain()
                 } else {
                     Toast.makeText(this, "Ambos campos son obligatorios", Toast.LENGTH_SHORT).show()

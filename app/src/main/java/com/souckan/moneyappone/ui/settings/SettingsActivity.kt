@@ -82,12 +82,9 @@ class SettingsActivity : AppCompatActivity() {
         }
 
 
-        binding.btnImport.setOnClickListener {
-
-
+        /*binding.btnImport.setOnClickListener {
             startImportDatabase()
-
-        }
+        }*/
         binding.tvTitleSettings.text = getString(R.string.settings)
     }
 

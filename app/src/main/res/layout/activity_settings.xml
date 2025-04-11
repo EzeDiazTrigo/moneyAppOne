@@ -41,7 +41,8 @@
         android:orientation="horizontal"
         tools:ignore="MissingConstraints"
         app:layout_constraintTop_toBottomOf="@+id/tvTitleSettings"
-        android:layout_marginTop="40dp">
+        android:layout_marginTop="40dp"
+        >
 
         <ImageView
             android:layout_width="wrap_content"
@@ -80,14 +81,15 @@
         android:orientation="horizontal"
         tools:ignore="MissingConstraints"
         app:layout_constraintTop_toBottomOf="@+id/btnExport"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:src="@drawable/ic_import"
-            app:tint="@color/grey" />
+            app:tint="@color/primaryLight" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -99,14 +101,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/import_title"
-                android:textColor="@color/white" />
+                android:textColor="@color/primaryLight" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/import_description"
                 android:textSize="11sp"
-                android:textColor="@color/grey" />
+                android:textColor="@color/primaryLight" />
         </LinearLayout>
 
     </LinearLayout>
