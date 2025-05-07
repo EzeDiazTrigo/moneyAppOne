@@ -81,7 +81,7 @@ class PinActivity : AppCompatActivity() {
                 binding.tvTitlePin.text = getString(com.souckan.moneyappone.R.string.change_pin_title)
                 setupNewPin() // reutilizamos la función que ya tenés
             } else {
-                Toast.makeText(this, "PIN incorrecto", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.invalid_pin), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -115,7 +115,7 @@ class PinActivity : AppCompatActivity() {
     private fun showRecoveryDialog() {
         val question = pinManager.getSecurityQuestion()
         if (question == null) {
-            Toast.makeText(this, "No hay pregunta de seguridad configurada", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.security_question_not_found), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -123,21 +123,21 @@ class PinActivity : AppCompatActivity() {
         input.inputType = InputType.TYPE_CLASS_TEXT
 
         AlertDialog.Builder(this)
-            .setTitle("Recuperar PIN")
+            .setTitle(getString(R.string.restore_pint))
             .setMessage(question)
             .setView(input)
-            .setPositiveButton("Aceptar") { _, _ ->
+            .setPositiveButton(getString(R.string.accept)) { _, _ ->
                 val answer = input.text.toString()
                 if (pinManager.isSecurityAnswerCorrect(answer)) {
-                    Toast.makeText(this, "Respuesta correcta. Ingresá un nuevo PIN.", Toast.LENGTH_SHORT).show()
-                    binding.tvTitlePin.text = "Configurar nuevo PIN"
+                    Toast.makeText(this, getString(R.string.insert_new_pin), Toast.LENGTH_SHORT).show()
+                    binding.tvTitlePin.text = getString(R.string.configure_pin)
                     pinManager.clearPin()
                     setupNewPin()
                 } else {
-                    Toast.makeText(this, "Respuesta incorrecta", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.incorrect_answer), Toast.LENGTH_SHORT).show()
                 }
             }
-            .setNegativeButton("Cancelar", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
@@ -147,12 +147,12 @@ class PinActivity : AppCompatActivity() {
         val currentAnswer = pinManager.getSecurityAnswer()
 
         val inputQuestion = EditText(this).apply {
-            hint = "Ej: ¿Cómo se llama tu mascota?"
+            hint = getString(R.string.example)
             setText(currentQuestion ?: "")
         }
 
         val inputAnswer = EditText(this).apply {
-            hint = "Respuesta"
+            hint = getString(R.string.answer)
             inputType = InputType.TYPE_CLASS_TEXT
             setText(currentAnswer ?: "")
         }
@@ -165,9 +165,9 @@ class PinActivity : AppCompatActivity() {
         }
 
         AlertDialog.Builder(this)
-            .setTitle("Configurar pregunta de seguridad")
+            .setTitle(getString(R.string.new_question))
             .setView(layout)
-            .setPositiveButton("Guardar") { _, _ ->
+            .setPositiveButton(getString(R.string.save)) { _, _ ->
                 val question = inputQuestion.text.toString()
                 val answer = inputAnswer.text.toString()
                 if (question.isNotBlank() && answer.isNotBlank()) {
@@ -175,7 +175,7 @@ class PinActivity : AppCompatActivity() {
                     pinManager.setUserAuthenticated(true)
                     navigateToMain()
                 } else {
-                    Toast.makeText(this, "Ambos campos son obligatorios", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.complete_spaces), Toast.LENGTH_SHORT).show()
                     showSecurityQuestionSetupDialog() // Volver a mostrar si falta algo
                 }
             }

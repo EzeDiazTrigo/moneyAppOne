@@ -9,6 +9,7 @@ import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.room.Room
+import com.souckan.moneyappone.R
 import com.souckan.moneyappone.data.database.TotalDatabase
 import com.souckan.moneyappone.di.RoomModule
 import com.souckan.moneyappone.di.RoomModule.provideDatabase
@@ -37,10 +38,10 @@ object DatabaseUtils {
                 }
             }
 
-            Toast.makeText(context, "Base de datos exportada con éxito", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, context.getString(R.string.export_success), Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
-            Log.e("ExportDB", "Error exportando la base de datos", e)
-            Toast.makeText(context, "Error al exportar la base de datos", Toast.LENGTH_SHORT).show()
+            Log.e("ExportDB", context.getString(R.string.export_error), e)
+            Toast.makeText(context, context.getString(R.string.export_error), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -51,7 +52,8 @@ object DatabaseUtils {
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
             type = "*/*"
         }
-        activity.startActivityForResult(Intent.createChooser(intent, "Selecciona la base de datos"), 1001)
+        val title = activity.getString(R.string.select_database)
+        activity.startActivityForResult(Intent.createChooser(intent, title), 1001)
     }
 
 
@@ -67,11 +69,11 @@ object DatabaseUtils {
                 }
             }
             Log.d("ImportDB", "Importación completada: ${outputFile.absolutePath}")
-            Toast.makeText(context, "Importación exitosa", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.import_success), Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.e("ImportDB", "Error al importar la base de datos", e)
-            Toast.makeText(context, "Error al importar base de datos", Toast.LENGTH_LONG).show()
+            Log.e("ImportDB", context.getString(R.string.import_error), e)
+            Toast.makeText(context, context.getString(R.string.import_error), Toast.LENGTH_LONG).show()
         }
     }
 

@@ -2,7 +2,6 @@
 <resources>
     <string name="app_name">ControlCash</string>
 
-    <string name="debt">Coming soon...</string>
     <string name="bill">Transactions</string>
     <string name="total">Totals</string>
     <string name="service">Coming soon...</string>
@@ -67,5 +66,26 @@
     <string name="usdt">USDT</string>
     <string name="usdc">USDC</string>
     <string name="dai">DAI</string>
+    <string name="debt">Coming soon...</string>
+
+    <!--Toast-->
+    <string name="export_success">Database exported successfully</string>
+    <string name="export_error">Error exporting the database</string>
+    <string name="select_database">Select the database</string>
+    <string name="import_complete">Database import complete</string>
+    <string name="import_success">The database was imported successfully</string>
+    <string name="import_error">Error importing the database</string>
+    <string name="invalid_pin">Incorrect PIN</string>
+    <string name="security_question_not_found">No security question set</string>
+    <string name="restore_pint">Recover PIN</string> <!-- Nota: hay un typo en el name, debería ser "restore_pin" -->
+    <string name="accept">Accept</string>
+    <string name="insert_new_pin">Correct answer. Enter a new PIN.</string>
+    <string name="new_pin">Set new PIN</string>
+    <string name="incorrect_answer">Incorrect answer</string>
+    <string name="example">What is your pet\'s name?</string>
+    <string name="answer">Answer</string>
+    <string name="new_question">Set security question</string>
+    <string name="complete_spaces">Both fields are required</string>
+
 
 </resources>
