@@ -2,21 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/billFragment"
-        android:title="@string/bill"
-        android:icon="@drawable/ic_money"/>
+        android:icon="@drawable/ic_money"
+        android:title="@string/bill" />
 
     <item
         android:id="@+id/totalFragment"
-        android:title="@string/total"
-        android:icon="@drawable/ic_bank"/>
+        android:icon="@drawable/ic_bank"
+        android:title="@string/total" />
 
-    <item
-        android:id="@+id/debtFragment"
-        android:title="@string/debt"
-        android:icon="@drawable/ic_debt"/>
 
-    <item
-        android:id="@+id/serviceFragment"
-        android:title="@string/service"
-        android:icon="@drawable/ic_services"/>
 </menu>

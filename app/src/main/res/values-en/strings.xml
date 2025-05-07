@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ControlCash</string>
+
+    <string name="bill">Transactions</string>
+    <string name="total">Totals</string>
+    <string name="service">Coming soon...</string>
+    <string name="settings">Settings</string>
+
+    <string name="select_currency">Select your currency</string>
+    <string name="select_account">Select your account</string>
+    <string name="insert_amount">Enter the amount</string>
+    <string name="select_date">Select the date</string>
+    <string name="insert_description">Enter a description</string>
+    <string name="new_bill">New expense</string>
+    <string name="add_bill">Add expense</string>
+    <string name="add_account">Add account</string>
+
+    <string name="edit_account_name">Edit name</string>
+    <string name="delete_account_and_bills">Delete account</string>
+
+    <string name="currency">Currency</string>
+    <string name="account">Account</string>
+    <string name="amount">Amount</string>
+    <string name="date">Date</string>
+    <string name="dialog_currency">Currency*</string>
+    <string name="dialog_account">Account*</string>
+    <string name="dialog_amount">Amount*</string>
+    <string name="dialog_date">Date*</string>
+    <string name="description">Description</string>
+
+    <!--IMPORT & EXPORT-->
+    <string name="import_description">Load the database from an external file</string>
+    <string name="export_description">Save a copy of the database</string>
+
+    <string name="import_title">Import</string>
+    <string name="export_title">Export</string>
+
+    <string name="accoutn_not_found">Account not found</string>
+    <string name="ask_remove">Are you sure you want to delete this transaction?</string>
+    <string name="warning">Warning!</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="to_continue">Continue ></string>
+    <string name="save">Save</string>
+    <string name="delete_account_title">Delete Account</string>
+    <string name="dark_mode">Dark mode</string>
+    <string name="dark_mode_description">Enable dark mode for a visual change</string>
+
+    <!--PIN-->
+    <string name="pin_saved">PIN saved successfully</string>
+    <string name="pin_error">Error saving PIN</string>
+    <string name="pin_more_four">PIN must be 4 or more digits</string>
+    <string name="pin_wrong">Incorrect PIN</string>
+    <string name="change_pin">Change PIN</string>
+    <string name="change_pin_title">Enter your new PIN</string>
+    <string name="confirm_pin">Enter your current PIN</string>
+    <string name="change_pin_description">Change your current PIN to a new one</string>
+    <string name="configure_pin">Create a PIN</string>
+    <string name="write_pin">Enter your PIN</string>
+    <string name="forgot_pin">Forgot your PIN?</string>
+
+    <!--CURRENCIES-->
+    <string name="ars">ARS</string>
+    <string name="usd">USD</string>
+    <string name="usdt">USDT</string>
+    <string name="usdc">USDC</string>
+    <string name="dai">DAI</string>
+    <string name="debt">Coming soon...</string>
+
+    <!--Toast-->
+    <string name="export_success">Database exported successfully</string>
+    <string name="export_error">Error exporting the database</string>
+    <string name="select_database">Select the database</string>
+    <string name="import_complete">Database import complete</string>
+    <string name="import_success">The database was imported successfully</string>
+    <string name="import_error">Error importing the database</string>
+    <string name="invalid_pin">Incorrect PIN</string>
+    <string name="security_question_not_found">No security question set</string>
+    <string name="restore_pint">Recover PIN</string> <!-- Nota: hay un typo en el name, debería ser "restore_pin" -->
+    <string name="accept">Accept</string>
+    <string name="insert_new_pin">Correct answer. Enter a new PIN.</string>
+    <string name="new_pin">Set new PIN</string>
+    <string name="incorrect_answer">Incorrect answer</string>
+    <string name="example">What is your pet\'s name?</string>
+    <string name="answer">Answer</string>
+    <string name="new_question">Set security question</string>
+    <string name="complete_spaces">Both fields are required</string>
+
+
+</resources>

@@ -7,6 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -14,15 +15,18 @@ import javax.inject.Singleton
 object NetworkModule {
     @Provides
     @Singleton
+    @Named("dollar")
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://dolarapi.com/v1/dolares/")
+            .baseUrl("https://api.binance.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
     @Provides
-    fun provideHoroscopeApiService(retrofit: Retrofit):DollarAPIService{
-        return retrofit.create(DollarAPIService::class.java)
+    @Singleton
+    fun provideApiService(@Named("dollar") retrofit: Retrofit): BinanceAPIService {
+        return retrofit.create(BinanceAPIService::class.java)
     }
+
 }

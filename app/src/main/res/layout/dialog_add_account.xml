@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="250dp"
+    android:layout_height="wrap_content"
+    android:background="@color/primaryDark"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_account"
+        android:textColor="@color/white" />
+
+    <AutoCompleteTextView
+        android:id="@+id/acAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/select_account"
+        android:inputType="text"
+        android:textColor="@color/white"
+        android:textColorHint="@color/colorHint" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_currency"
+        android:textColor="@color/white" />
+
+    <AutoCompleteTextView
+        android:id="@+id/acCurrency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/select_currency"
+        android:inputType="text"
+        android:textColor="@color/white"
+        android:textColorHint="@color/colorHint" />
+
+    <Button
+        android:id="@+id/btnAddAccoutn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/secondary"
+        android:text="@string/add_account"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
+
+</LinearLayout>
